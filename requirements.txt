@@ -1,0 +1,6 @@
+click>=7.1.2
+configconfig>=0.4.0
+consolekit>=0.1.2
+domdf_python_tools>=1.3.0
+repo_helper==2020.11.6
+stdlib_list>=0.7.0
