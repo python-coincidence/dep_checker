@@ -28,6 +28,7 @@ Tool to check all requirements are actually required.
 
 # stdlib
 import sys
+from typing import List, Optional
 
 # 3rd party
 import click
@@ -46,20 +47,28 @@ __all__ = ["cli", "main"]
 @click.option(
 		"--req-file",
 		type=click.STRING,
+		metavar="FILENAME",
 		default="requirements.txt",
 		help="The requirements file.",
 		)
 @click.option(
+		"-a",
 		"--allowed-unused",
 		type=click.STRING,
 		multiple=True,
+		help="Requirements which are allowed to be unused in the source code."
 		)
+@click.option("--colour/--no-colour", is_flag=True, default=None, help="Whether to use coloured output.")
 @click_command()
-def cli(pkg_name, req_file, allowed_unused):
+def cli(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colour: Optional[bool]) -> int:
+	"""
+	Tool to check all requirements are actually required.
+	"""
+
 	if allowed_unused == ():
 		allowed_unused = None
 
-	check_imports(pkg_name, req_file=req_file, allowed_unused=allowed_unused)
+	return check_imports(pkg_name, req_file=req_file, allowed_unused=allowed_unused, colour=colour)
 
 
 def main():

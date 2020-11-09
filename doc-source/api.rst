@@ -1,5 +1,5 @@
 ============
-dep_checker
+Public API
 ============
 
 .. automodule:: dep_checker

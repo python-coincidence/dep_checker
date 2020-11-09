@@ -22,3 +22,6 @@ python_versions:
 console_scripts:
  - dep-checker = dep_checker.__main__:main
  - dep_checker = dep_checker.__main__:main
+
+extra_sphinx_extensions:
+ - sphinx_click_tweak

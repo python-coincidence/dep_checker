@@ -47,9 +47,11 @@ __license__: str = "MIT License"
 __version__: str = "0.0.0"
 __email__: str = "dominic@davis-foster.co.uk"
 
-__all__ = ["AllowedUnused", "ConfigReader", "Visitor", "check_imports"]
+__all__ = ["template", "check_imports"]
 
 libraries = stdlib_list()
+
+#: The template to use when printing output.
 template = "{name} imported on line {lineno} of {filename}"
 
 
@@ -163,10 +165,27 @@ reader = ConfigReader("dep_checker", default_factory=dict)
 
 
 def check_imports(
-		pkg_name: str, req_file: PathLike = "requirements.txt", allowed_unused: Optional[List[str]] = None
-		):
+		pkg_name: str,
+		req_file: PathLike = "requirements.txt",
+		allowed_unused: Optional[List[str]] = None,
+		colour: Optional[bool] = None,
+		) -> int:
+	"""
+	Check imports for the given package, against the given requirements file.
 
-	colour = resolve_color_default()
+	:param pkg_name:
+	:param req_file:
+	:param allowed_unused: List of requirements which are allowed to be unused in the source code.
+	:default allowed_unused: ``[]``
+	:param colour: Whether to use coloured output.
+	:no-default colour:
+
+	| Returns ``0`` if all requirements are used and listed as requirements.
+	| Returns ``1`` is a requirement is unused, or if a package is imported but not listed as a requirement.
+	"""
+
+	colour = resolve_color_default(colour)
+
 	cwd = PathPlus.cwd()
 	config = reader.visit()
 
@@ -192,6 +211,8 @@ def check_imports(
 					(imports[name].get(filename.relative_to(cwd), lineno), lineno)
 					)
 
+	ret = 0
+
 	for req in req_names:
 		for filename, lineno in imports[req].items():
 			msg = template.format(name=req, lineno=lineno, filename=filename)
@@ -200,9 +221,13 @@ def check_imports(
 		else:
 			if req not in allowed_unused:
 				click.echo(Fore.YELLOW(f"✘ {req} never imported"), color=colour)
+				ret |= 1
 
 	for import_name, locations in imports.items():
 		if import_name not in req_names:
 			for filename, lineno in locations.items():
 				msg = template.format(name=import_name, lineno=lineno, filename=filename)
 				click.echo(Fore.RED(f"✘ {msg} but not listed as a requirement"), color=colour)
+				ret |= 1
+
+	return ret
