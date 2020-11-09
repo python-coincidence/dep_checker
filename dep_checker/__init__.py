@@ -38,16 +38,16 @@ from configconfig.configvar import ConfigVar
 from consolekit.terminal_colours import Fore, resolve_color_default
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
-from repo_helper.requirements_tools import read_requirements
+from shippinglabel.requirements import read_requirements
 from stdlib_list import stdlib_list
-
-__all__ = ["AllowedUnused", "ConfigReader", "Visitor", "check_imports"]
 
 __author__: str = "Dominic Davis-Foster"
 __copyright__: str = "2020 Dominic Davis-Foster"
 __license__: str = "MIT License"
 __version__: str = "0.0.0"
 __email__: str = "dominic@davis-foster.co.uk"
+
+__all__ = ["AllowedUnused", "ConfigReader", "Visitor", "check_imports"]
 
 libraries = stdlib_list()
 template = "{name} imported on line {lineno} of {filename}"
