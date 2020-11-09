@@ -124,16 +124,23 @@ class Visitor(ast.NodeVisitor):
 		self.import_sources = []
 		self.pkg_name = pkg_name
 
+	def record_import(self, name: str, lineno: int):
+		name = name.split(".")[0]
+
+		if name not in libraries and name != self.pkg_name:
+			self.import_sources.append((name, lineno))
+
 	def visit_Import(self, node: ast.Import) -> None:
 		for name in node.names:
 			name: ast.alias
-			if name.name not in libraries and name.name != self.pkg_name:
-				self.import_sources.append((name.name.split(".")[0], node.lineno))
+			self.record_import(name.name, node.lineno)
 
 	def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
-		name = node.module.split(".")[0]
-		if name not in libraries and name != self.pkg_name:
-			self.import_sources.append((name, node.lineno))
+		if node.level != 0:
+			# relative import
+			return
+
+		self.record_import(node.module, node.lineno)
 
 	def visit(self, node: ast.AST) -> List[Tuple[str, int]]:
 		super().visit(node)
@@ -159,6 +166,29 @@ class Visitor(ast.NodeVisitor):
 			else:
 				# raise NotImplementedError(type(handler.type))
 				pass
+
+	def visit_If(self, node: ast.If) -> Any:
+		if is_type_checking(node.test):
+			# TODO: check guarded imports
+			# print("Guarded")
+			return None
+
+		elif isinstance(node.test, ast.BoolOp):
+			for value in node.test.values:
+				if is_type_checking(value):
+					return None
+
+		self.generic_visit(node)
+
+
+def is_type_checking(node) -> bool:
+	if isinstance(node, ast.NameConstant) and node.value is False:
+		return True
+	elif isinstance(node, ast.Name) and node.id == "TYPE_CHECKING":
+		return True
+	elif isinstance(node, ast.Attribute) and node.attr == "TYPE_CHECKING":
+		return True
+	return False
 
 
 reader = ConfigReader("dep_checker", default_factory=dict)
