@@ -4,5 +4,4 @@
    entry: dep-checker
    pass_filenames: false
    language: python
-   types: [python]
-   files: .*requirements.*\.txt$
+   files: (.*requirements.*\.txt|.*\.py)$
