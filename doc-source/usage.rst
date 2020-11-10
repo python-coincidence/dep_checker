@@ -13,6 +13,21 @@ In either case options must be placed in the ``[dep_checker]`` section.
 	List of requirements which are allowed to be unused in the source code.
 
 
+.. confval:: name_mapping
+
+	Mapping of requirement names (e.g. "biopython") to the names of packages they provide (e.g. "Bio").
+
+	.. versionadded:: 0.2.0
+
+	**Example:**
+
+	.. code-block:: ini
+
+		[dep_checker]
+		name_mapping =
+			biopython = Bio
+
+
 dep-checker
 -----------------
 

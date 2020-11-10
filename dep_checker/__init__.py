@@ -29,17 +29,18 @@ Tool to check all requirements are actually required.
 # stdlib
 import ast
 from collections import defaultdict
-from configparser import ConfigParser
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 # 3rd party
 import click
-from configconfig.configvar import ConfigVar
 from consolekit.terminal_colours import Fore, resolve_color_default
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
 from shippinglabel.requirements import read_requirements
 from stdlib_list import stdlib_list
+
+# this package
+from dep_checker.config import AllowedUnused, ConfigReader, NameMapping
 
 __author__: str = "Dominic Davis-Foster"
 __copyright__: str = "2020 Dominic Davis-Foster"
@@ -55,69 +56,6 @@ libraries = stdlib_list()
 template = "{name} imported on line {lineno} of {filename}"
 
 
-class AllowedUnused(ConfigVar):
-	dtype = List[str]
-	default = []
-	__name__ = "allowed_unused"
-
-	@classmethod
-	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
-
-		if cls.__name__ in raw_config_vars:
-			value = raw_config_vars[cls.__name__]
-			if isinstance(value, str):
-				value = list(filter(lambda x: bool(x), value.splitlines()))
-
-			if isinstance(value, list):
-				for element in value:
-					if not isinstance(element, str):
-						raise ValueError(f"'{cls.__name__}' must be a list of strings") from None
-
-			return value
-
-		return cls.default[:]
-
-
-class ConfigReader:
-
-	def __init__(self, section_name: str, default_factory: Callable = dict, work_dir: PathLike = "."):
-		self.section_name = section_name
-		self.work_dir = PathPlus(work_dir)
-		self.default_factory = default_factory
-
-	def visit_tox_ini(self) -> Optional[Dict]:
-		if (self.work_dir / "tox.ini").is_file():
-			tox_ini = ConfigParser()
-			tox_ini.read(self.work_dir / "tox.ini")
-
-			if self.section_name in tox_ini:
-				return dict(tox_ini[self.section_name])
-
-		return None
-
-	def visit_setup_cfg(self) -> Optional[Dict]:
-		if (self.work_dir / "setup.cfg").is_file():
-			tox_ini = ConfigParser()
-			tox_ini.read(self.work_dir / "setup.cfg")
-
-			if self.section_name in tox_ini:
-				return dict(tox_ini[self.section_name])
-
-		return None
-
-	# TODO: pyproject.toml, repo_helper.yml
-
-	def visit(self) -> Any:
-		for file in [
-				self.visit_tox_ini,
-				]:
-			ret = file()
-			if ret is not None:
-				return ret
-
-		return self.default_factory()
-
-
 class Visitor(ast.NodeVisitor):
 
 	def __init__(self, pkg_name: str):
@@ -131,11 +69,13 @@ class Visitor(ast.NodeVisitor):
 			self.import_sources.append((name, lineno))
 
 	def visit_Import(self, node: ast.Import) -> None:
+		# TODO: allow ignoring unused with "# noqa, or maybe "# nodep"?"
 		for name in node.names:
 			name: ast.alias
 			self.record_import(name.name, node.lineno)
 
 	def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+		# TODO: allow ignoring unused with "# noqa, or maybe "# nodep"?"
 		if node.level != 0:
 			# relative import
 			return
@@ -199,6 +139,7 @@ def check_imports(
 		req_file: PathLike = "requirements.txt",
 		allowed_unused: Optional[List[str]] = None,
 		colour: Optional[bool] = None,
+		name_mapping: Optional[Dict[str, str]] = None,
 		) -> int:
 	"""
 	Check imports for the given package, against the given requirements file.
@@ -209,9 +150,13 @@ def check_imports(
 	:default allowed_unused: ``[]``
 	:param colour: Whether to use coloured output.
 	:no-default colour:
+	:param name_mapping: Optional mapping of requirement names to import names, if they differ.
+	:no-default name_mapping:
 
 	| Returns ``0`` if all requirements are used and listed as requirements.
 	| Returns ``1`` is a requirement is unused, or if a package is imported but not listed as a requirement.
+
+	.. versionchanged:: 0.2.0 Added the ``name_mapping`` option.
 	"""
 
 	colour = resolve_color_default(colour)
@@ -221,6 +166,9 @@ def check_imports(
 
 	if allowed_unused is None:
 		allowed_unused = AllowedUnused.get(config)
+
+	if name_mapping is None:
+		name_mapping = NameMapping.get(config)
 
 	req_file = PathPlus(req_file)
 
@@ -245,6 +193,9 @@ def check_imports(
 					)
 
 	ret = 0
+
+	# replace names in req_names with the name of the package the requirement provides
+	req_names = [name if name not in name_mapping else name_mapping[name] for name in req_names]
 
 	for req in req_names:
 		for filename, lineno in imports[req].items():
