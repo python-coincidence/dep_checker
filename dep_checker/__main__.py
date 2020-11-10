@@ -33,6 +33,7 @@ from typing import List, Optional
 # 3rd party
 import click
 from consolekit import click_command
+from consolekit.utils import abort
 
 # this package
 from dep_checker import check_imports
@@ -68,7 +69,10 @@ def cli(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colou
 	if allowed_unused == ():
 		allowed_unused = None
 
-	return check_imports(pkg_name, req_file=req_file, allowed_unused=allowed_unused, colour=colour)
+	try:
+		return check_imports(pkg_name, req_file=req_file, allowed_unused=allowed_unused, colour=colour)
+	except FileNotFoundError as e:
+		raise abort(str(e))
 
 
 def main():

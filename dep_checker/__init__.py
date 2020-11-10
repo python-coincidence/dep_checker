@@ -231,6 +231,9 @@ def check_imports(
 	imports: Dict[str, Dict[PathPlus, int]] = defaultdict(dict)
 	# mapping of import name to mapping of filename to lineno where imported
 
+	if not (cwd / pkg_name).exists():
+		raise FileNotFoundError(f"Can't find a package called {pkg_name} in the current directory.")
+
 	for filename in (cwd / pkg_name).rglob("*.py"):
 		if filename.relative_to(cwd).parts[0] in {".tox", "venv", ".venv"}:
 			continue
