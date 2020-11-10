@@ -1,0 +1,7 @@
+ - id: dep_checker
+   name: Check dependencies.
+   description: Tool to check all requirements are actually required.
+   entry: dep-checker
+   pass_filenames: false
+   language: python
+   types: [python]
