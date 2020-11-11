@@ -90,7 +90,7 @@ class NamespacePackages(ConfigVar):
 
 			return value
 
-		return cls.default[:]
+		return cls.default.copy()
 
 
 class NameMapping(ConfigVar):
