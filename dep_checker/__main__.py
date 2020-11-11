@@ -61,7 +61,7 @@ __all__ = ["cli", "main"]
 		)
 @click.option("--colour/--no-colour", is_flag=True, default=None, help="Whether to use coloured output.")
 @click_command()
-def cli(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colour: Optional[bool]) -> int:
+def main(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colour: Optional[bool]):
 	"""
 	Tool to check all requirements are actually required.
 	"""
@@ -70,13 +70,9 @@ def cli(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colou
 		allowed_unused = None
 
 	try:
-		return check_imports(pkg_name, req_file=req_file, allowed_unused=allowed_unused, colour=colour)
+		sys.exit(check_imports(pkg_name, req_file=req_file, allowed_unused=allowed_unused, colour=colour))
 	except FileNotFoundError as e:
 		raise abort(str(e))
-
-
-def main():
-	return cli(obj={})
 
 
 if __name__ == "__main__":
