@@ -46,7 +46,7 @@ from dep_checker.config import AllowedUnused, ConfigReader, NameMapping, Namespa
 __author__: str = "Dominic Davis-Foster"
 __copyright__: str = "2020 Dominic Davis-Foster"
 __license__: str = "MIT License"
-__version__: str = "0.3.0"
+__version__: str = "0.3.1"
 __email__: str = "dominic@davis-foster.co.uk"
 
 __all__ = ["template", "check_imports"]
@@ -165,7 +165,7 @@ def check_imports(
 	| Returns ``0`` if all requirements are used and listed as requirements.
 	| Returns ``1`` is a requirement is unused, or if a package is imported but not listed as a requirement.
 
-	.. versionchanged:: 0.3.0 Added the ``name_mapping`` option.
+	.. versionchanged:: 0.3.1 Added the ``name_mapping`` option.
 	"""
 
 	ret = 0
