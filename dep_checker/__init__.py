@@ -61,7 +61,7 @@ class Visitor(ast.NodeVisitor):
 
 	def __init__(self, pkg_name: str, namespace_packages: Optional[Dict[str, List[str]]] = None):
 		self.import_sources = []
-		self.pkg_name = pkg_name
+		self.pkg_name = re.sub("[-.]", '_', pkg_name)
 		self.namespace_packages = namespace_packages or {}
 
 	def record_import(self, name: str, lineno: int):
@@ -69,11 +69,11 @@ class Visitor(ast.NodeVisitor):
 
 		for namespace in self.namespace_packages:
 			if namespace in name:
-				name = name.partition(namespace)[1].replace(".", "_")
+				name = name.partition(namespace)[1].replace('.', '_')
 				break
 		else:
 			# Not a namespace package
-			name = name.split(".")[0]
+			name = name.split('.')[0]
 
 		if name not in libraries and name != self.pkg_name:
 			self.import_sources.append((name, lineno))
@@ -190,7 +190,7 @@ def check_imports(
 	req_names = []
 
 	for req in read_requirements(req_file)[0]:
-		name = req.name.replace("-", "_")
+		name = req.name.replace('-', '_')
 		if name in name_mapping:
 			# replace names in req_names with the name of the package the requirement provides
 			req_names.append(name_mapping[name])
@@ -205,13 +205,13 @@ def check_imports(
 	if not (cwd / pkg_name).exists():
 		raise FileNotFoundError(f"Can't find a package called {pkg_name} in the current directory.")
 
-	for filename in (cwd / pkg_name).rglob("*.py"):
+	for filename in (cwd / pkg_name.replace('.', '/')).rglob("*.py"):
 		filename = filename.relative_to(cwd)
 
 		if filename.parts[0] in {".tox", "venv", ".venv"}:
 			continue
 
-		visitor = Visitor(pkg_name, namespace_packages)
+		visitor = Visitor(pkg_name.replace('/', '.'), namespace_packages)
 		file_content = filename.read_text()
 
 		for import_name, lineno in visitor.visit(ast.parse(file_content)):
