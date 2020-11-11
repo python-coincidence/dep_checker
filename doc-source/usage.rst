@@ -27,6 +27,38 @@ In either case options must be placed in the ``[dep_checker]`` section.
 		name_mapping =
 			biopython = Bio
 
+.. confval:: namespace_packages
+
+	List of namespace packages, e.g. ``ruamel.yaml``.
+	This currently only handles imports in the form
+	``import namespace.package`` or
+	``from namespace.package import object``,
+	but not ``from namespace import package``.
+
+	.. versionadded:: 0.3.0
+
+	**Example:**
+
+	.. code-block:: ini
+
+		[dep_checker]
+		namespace_packages =
+			ruamel.yaml
+
+
+Ignoring imports that aren't listed as requirements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To ignore lines where packages are imported, but aren't listed in ``requirements.txt``, use ``# nodep``.
+
+E.g.:
+
+.. code-block:: python
+
+	import pytest  # nodep
+
+.. versionadded:: 0.3.0
+
 
 dep-checker
 -----------------

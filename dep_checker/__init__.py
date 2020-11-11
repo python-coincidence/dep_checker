@@ -41,7 +41,7 @@ from shippinglabel.requirements import read_requirements
 from stdlib_list import stdlib_list
 
 # this package
-from dep_checker.config import AllowedUnused, ConfigReader, NameMapping
+from dep_checker.config import AllowedUnused, ConfigReader, NameMapping, NamespacePackages
 
 __author__: str = "Dominic Davis-Foster"
 __copyright__: str = "2020 Dominic Davis-Foster"
@@ -59,24 +59,31 @@ template = "{name} imported on line {lineno} of {filename}"
 
 class Visitor(ast.NodeVisitor):
 
-	def __init__(self, pkg_name: str):
+	def __init__(self, pkg_name: str, namespace_packages: Optional[Dict[str, List[str]]] = None):
 		self.import_sources = []
 		self.pkg_name = pkg_name
+		self.namespace_packages = namespace_packages or {}
 
 	def record_import(self, name: str, lineno: int):
-		name = name.split(".")[0]
+		# TODO: handle ``from namespace import package``
+
+		for namespace in self.namespace_packages:
+			if namespace in name:
+				name = name.partition(namespace)[1].replace(".", "_")
+				break
+		else:
+			# Not a namespace package
+			name = name.split(".")[0]
 
 		if name not in libraries and name != self.pkg_name:
 			self.import_sources.append((name, lineno))
 
 	def visit_Import(self, node: ast.Import) -> None:
-		# TODO: allow ignoring unused with "# noqa, or maybe "# nodep"?"
 		for name in node.names:
 			name: ast.alias
 			self.record_import(name.name, node.lineno)
 
 	def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
-		# TODO: allow ignoring unused with "# noqa, or maybe "# nodep"?"
 		if node.level != 0:
 			# relative import
 			return
@@ -141,6 +148,7 @@ def check_imports(
 		allowed_unused: Optional[List[str]] = None,
 		colour: Optional[bool] = None,
 		name_mapping: Optional[Dict[str, str]] = None,
+		namespace_packages: Optional[List[str]] = None,
 		) -> int:
 	"""
 	Check imports for the given package, against the given requirements file.
@@ -171,6 +179,9 @@ def check_imports(
 	if name_mapping is None:
 		name_mapping = NameMapping.get(config)
 
+	if namespace_packages is None:
+		namespace_packages = NamespacePackages.get(config)
+
 	req_file = PathPlus(req_file)
 
 	if not req_file.is_absolute():
@@ -200,7 +211,7 @@ def check_imports(
 		if filename.parts[0] in {".tox", "venv", ".venv"}:
 			continue
 
-		visitor = Visitor(pkg_name)
+		visitor = Visitor(pkg_name, namespace_packages)
 		file_content = filename.read_text()
 
 		for import_name, lineno in visitor.visit(ast.parse(file_content)):

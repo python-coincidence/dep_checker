@@ -28,6 +28,7 @@ Functions to read configuration.
 
 # stdlib
 import re
+from collections import defaultdict
 from configparser import ConfigParser
 from typing import Any, Callable, Dict, List, Optional
 
@@ -56,6 +57,36 @@ class AllowedUnused(ConfigVar):
 				for element in value:
 					if not isinstance(element, str):
 						raise ValueError(f"'{cls.__name__}' must be a list of strings") from None
+
+			return value
+
+		return cls.default[:]
+
+
+class NamespacePackages(ConfigVar):
+	dtype = List[str]
+	rtype = dict
+	default = {}
+	__name__ = "namespace_packages"
+
+	@classmethod
+	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
+
+		if cls.__name__ in raw_config_vars:
+			value = raw_config_vars[cls.__name__]
+			if isinstance(value, str):
+				value = list(filter(lambda x: bool(x), value.splitlines()))
+
+			if isinstance(value, list):
+				for element in value:
+					if not isinstance(element, str):
+						raise ValueError(f"'{cls.__name__}' must be a list of strings") from None
+
+			namespaces = defaultdict(list)
+
+			for name in value:
+				namespace, pkg = name.rsplit('.')
+				namespaces[namespace].append(pkg)
 
 			return value
 
