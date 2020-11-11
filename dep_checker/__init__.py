@@ -28,6 +28,7 @@ Tool to check all requirements are actually required.
 
 # stdlib
 import ast
+import re
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -159,10 +160,10 @@ def check_imports(
 	.. versionchanged:: 0.2.0 Added the ``name_mapping`` option.
 	"""
 
-	colour = resolve_color_default(colour)
-
+	ret = 0
 	cwd = PathPlus.cwd()
 	config = reader.visit()
+	colour = resolve_color_default(colour)
 
 	if allowed_unused is None:
 		allowed_unused = AllowedUnused.get(config)
@@ -175,7 +176,18 @@ def check_imports(
 	if not req_file.is_absolute():
 		req_file = cwd / req_file
 
-	req_names = sorted(req.name.replace("-", "_") for req in read_requirements(req_file)[0])
+	req_names = []
+
+	for req in read_requirements(req_file)[0]:
+		name = req.name.replace("-", "_")
+		if name in name_mapping:
+			# replace names in req_names with the name of the package the requirement provides
+			req_names.append(name_mapping[name])
+		else:
+			req_names.append(name)
+
+	req_names.sort()
+
 	imports: Dict[str, Dict[PathPlus, int]] = defaultdict(dict)
 	# mapping of import name to mapping of filename to lineno where imported
 
@@ -183,35 +195,40 @@ def check_imports(
 		raise FileNotFoundError(f"Can't find a package called {pkg_name} in the current directory.")
 
 	for filename in (cwd / pkg_name).rglob("*.py"):
-		if filename.relative_to(cwd).parts[0] in {".tox", "venv", ".venv"}:
+		filename = filename.relative_to(cwd)
+
+		if filename.parts[0] in {".tox", "venv", ".venv"}:
 			continue
 
 		visitor = Visitor(pkg_name)
-		for name, lineno in visitor.visit(ast.parse(filename.read_text())):
-			imports[name][filename.relative_to(cwd)] = min(
-					(imports[name].get(filename.relative_to(cwd), lineno), lineno)
-					)
+		file_content = filename.read_text()
 
-	ret = 0
+		for import_name, lineno in visitor.visit(ast.parse(file_content)):
 
-	# replace names in req_names with the name of the package the requirement provides
-	req_names = [name if name not in name_mapping else name_mapping[name] for name in req_names]
+			if import_name not in req_names:
+				# Not listed as requirement
+
+				if re.match(r".*#\s*nodep.*", file_content.splitlines()[lineno - 1]):
+					# Marked with "# nodep", so the user wants to ignore this
+					continue
+
+				msg = template.format(name=import_name, lineno=lineno, filename=filename)
+				click.echo(Fore.RED(f"✘ {msg} but not listed as a requirement"), color=colour)
+				ret |= 1
+
+			else:
+				imports[import_name][filename] = min((imports[import_name].get(filename, lineno), lineno))
 
 	for req in req_names:
 		for filename, lineno in imports[req].items():
+			# Imported and listed as requirement
 			msg = template.format(name=req, lineno=lineno, filename=filename)
 			click.echo(Fore.GREEN(f"✔ {msg}"), color=colour)
 			break
 		else:
 			if req not in allowed_unused:
+				# not imported
 				click.echo(Fore.YELLOW(f"✘ {req} never imported"), color=colour)
-				ret |= 1
-
-	for import_name, locations in imports.items():
-		if import_name not in req_names:
-			for filename, lineno in locations.items():
-				msg = template.format(name=import_name, lineno=lineno, filename=filename)
-				click.echo(Fore.RED(f"✘ {msg} but not listed as a requirement"), color=colour)
 				ret |= 1
 
 	return ret
