@@ -31,5 +31,20 @@ In either case options must be placed in the ``[dep_checker]`` section.
 dep-checker
 -----------------
 
-.. click:: dep_checker.__main__:cli
+.. click:: dep_checker.__main__:main
 	:prog: dep-checker
+
+
+As a ``pre-commit`` hook
+----------------------------
+
+``dep-checker`` can also be used as a `pre-commit <https://pre-commit.com/>`_ hook.
+To do so, add the following to your
+`.pre-commit-config.yaml <https://pre-commit.com/#2-add-a-pre-commit-configuration>`_ file:
+
+.. pre-commit::
+	:rev: 0.1.2
+	:hooks: dep_checker
+	:args: <PKG_NAME>
+
+``<PKG_NAME>`` should be replaced with the name of the package to check, e.g. ``consolekit``.

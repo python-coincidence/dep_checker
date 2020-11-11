@@ -47,6 +47,7 @@ extensions = [
 		'sphinxcontrib.toctree_plus',
 		'seed_intersphinx_mapping',
 		'sphinx_click_tweak',
+		'sphinx_toolbox.pre_commit',
 		]
 
 sphinxemoji_style = 'twemoji'
