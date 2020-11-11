@@ -43,7 +43,7 @@ To do so, add the following to your
 `.pre-commit-config.yaml <https://pre-commit.com/#2-add-a-pre-commit-configuration>`_ file:
 
 .. pre-commit::
-	:rev: 0.1.2
+	:rev: 0.2.0
 	:hooks: dep_checker
 	:args: <PKG_NAME>
 

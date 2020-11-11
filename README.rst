@@ -77,7 +77,7 @@ dep_checker
 .. |language| image:: https://img.shields.io/github/languages/top/domdfcoding/dep_checker
 	:alt: GitHub top language
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/domdfcoding/dep_checker/v0.1.2
+.. |commits-since| image:: https://img.shields.io/github/commits-since/domdfcoding/dep_checker/v0.2.0
 	:target: https://github.com/domdfcoding/dep_checker/pulse
 	:alt: GitHub commits since tagged version
 
