@@ -38,7 +38,7 @@ from consolekit.terminal_colours import Fore, resolve_color_default
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
 from shippinglabel.requirements import read_requirements
-from stdlib_list import stdlib_list
+from stdlib_list import stdlib_list  # type: ignore
 
 # this package
 from dep_checker.config import AllowedUnused, ConfigReader, NameMapping, NamespacePackages
@@ -60,7 +60,7 @@ template = "{name} imported on line {lineno} of {filename}"
 class Visitor(ast.NodeVisitor):
 
 	def __init__(self, pkg_name: str, namespace_packages: Optional[Dict[str, List[str]]] = None):
-		self.import_sources = []
+		self.import_sources: List[Tuple[str, int]] = []
 		self.pkg_name = re.sub("[-.]", '_', pkg_name)
 		self.namespace_packages = namespace_packages or {}
 
@@ -79,8 +79,8 @@ class Visitor(ast.NodeVisitor):
 			self.import_sources.append((name, lineno))
 
 	def visit_Import(self, node: ast.Import) -> None:
+		name: ast.alias
 		for name in node.names:
-			name: ast.alias
 			self.record_import(name.name, node.lineno)
 
 	def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
@@ -88,7 +88,8 @@ class Visitor(ast.NodeVisitor):
 			# relative import
 			return
 
-		self.record_import(node.module, node.lineno)
+		if node.module:
+			self.record_import(node.module, node.lineno)
 
 	def visit(self, node: ast.AST) -> List[Tuple[str, int]]:
 		super().visit(node)
@@ -187,7 +188,7 @@ def check_imports(
 	if not req_file.is_absolute():
 		req_file = cwd / req_file
 
-	req_names = []
+	req_names: List[str] = []
 
 	for req in read_requirements(req_file)[0]:
 		name = req.name.replace('-', '_')
@@ -211,7 +212,7 @@ def check_imports(
 		if filename.parts[0] in {".tox", "venv", ".venv"}:
 			continue
 
-		visitor = Visitor(pkg_name.replace('/', '.'), namespace_packages)
+		visitor = Visitor(pkg_name.replace('/', '.'), namespace_packages)  # type: ignore
 		file_content = filename.read_text()
 
 		for import_name, lineno in visitor.visit(ast.parse(file_content)):
@@ -228,18 +229,20 @@ def check_imports(
 				ret |= 1
 
 			else:
-				imports[import_name][filename] = min((imports[import_name].get(filename, lineno), lineno))
+				# Waiting on mypy updating typeshed re: type: ignore
+				min_lineno = min((imports[import_name].get(filename, lineno), lineno))  # type: ignore
+				imports[import_name][filename] = min_lineno  # type: ignore
 
-	for req in req_names:
-		for filename, lineno in imports[req].items():
+	for req_name in req_names:
+		for filename, lineno in imports[req_name].items():
 			# Imported and listed as requirement
-			msg = template.format(name=req, lineno=lineno, filename=filename)
+			msg = template.format(name=req_name, lineno=lineno, filename=filename)
 			click.echo(Fore.GREEN(f"✔ {msg}"), color=colour)
 			break
 		else:
-			if req not in allowed_unused:
+			if req_name not in allowed_unused:
 				# not imported
-				click.echo(Fore.YELLOW(f"✘ {req} never imported"), color=colour)
+				click.echo(Fore.YELLOW(f"✘ {req_name} never imported"), color=colour)
 				ret |= 1
 
 	return ret

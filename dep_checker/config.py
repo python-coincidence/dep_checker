@@ -42,11 +42,16 @@ __all__ = ["AllowedUnused", "NameMapping", "ConfigReader"]
 
 class AllowedUnused(ConfigVar):
 	dtype = List[str]
-	default = []
+	default: List[str] = []
 	__name__ = "allowed_unused"
 
 	@classmethod
 	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
+		if raw_config_vars is None:
+			raw_config_vars = {}
+
+		if cls.rtype is None:
+			cls.rtype = cls.dtype
 
 		if cls.__name__ in raw_config_vars:
 			value = raw_config_vars[cls.__name__]
@@ -66,11 +71,16 @@ class AllowedUnused(ConfigVar):
 class NamespacePackages(ConfigVar):
 	dtype = List[str]
 	rtype = dict
-	default = {}
+	default: Dict[str, List[str]] = {}
 	__name__ = "namespace_packages"
 
 	@classmethod
 	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
+		if raw_config_vars is None:
+			raw_config_vars = {}
+
+		if cls.rtype is None:
+			cls.rtype = cls.dtype
 
 		if cls.__name__ in raw_config_vars:
 			value = raw_config_vars[cls.__name__]
@@ -95,11 +105,16 @@ class NamespacePackages(ConfigVar):
 
 class NameMapping(ConfigVar):
 	dtype = List[str]
-	default = []
+	default: List[str] = []
 	__name__ = "name_mapping"
 
 	@classmethod
 	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
+		if raw_config_vars is None:
+			raw_config_vars = {}
+
+		if cls.rtype is None:
+			cls.rtype = cls.dtype
 
 		if cls.__name__ in raw_config_vars:
 			value = raw_config_vars[cls.__name__]
