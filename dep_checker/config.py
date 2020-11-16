@@ -56,7 +56,7 @@ class AllowedUnused(ConfigVar):
 		if cls.__name__ in raw_config_vars:
 			value = raw_config_vars[cls.__name__]
 			if isinstance(value, str):
-				value = list(filter(lambda x: bool(x), value.splitlines()))
+				value = list(filter(bool, value.splitlines()))
 
 			if isinstance(value, list):
 				for element in value:
@@ -85,7 +85,7 @@ class NamespacePackages(ConfigVar):
 		if cls.__name__ in raw_config_vars:
 			value = raw_config_vars[cls.__name__]
 			if isinstance(value, str):
-				value = list(filter(lambda x: bool(x), value.splitlines()))
+				value = list(filter(bool, value.splitlines()))
 
 			if isinstance(value, list):
 				for element in value:
