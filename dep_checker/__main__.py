@@ -33,6 +33,7 @@ from typing import List, Optional
 # 3rd party
 import click
 from consolekit import click_command
+from consolekit.options import colour_option
 from consolekit.utils import abort
 
 # this package
@@ -59,7 +60,7 @@ __all__ = ["cli", "main"]
 		multiple=True,
 		help="Requirements which are allowed to be unused in the source code."
 		)
-@click.option("--colour/--no-colour", is_flag=True, default=None, help="Whether to use coloured output.")
+@colour_option()
 @click_command()
 def main(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colour: Optional[bool]):
 	"""
