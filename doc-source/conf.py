@@ -46,7 +46,7 @@ extensions = [
 		'sphinxcontrib.default_values',
 		'sphinxcontrib.toctree_plus',
 		'seed_intersphinx_mapping',
-		'sphinx_click_tweak',
+		'sphinx_click',
 		'sphinx_toolbox.pre_commit',
 		]
 
