@@ -123,7 +123,7 @@ class NameMapping(ConfigVar):
 
 class ConfigReader:
 
-	def __init__(self, section_name: str, default_factory: Callable = dict, work_dir: PathLike = "."):
+	def __init__(self, section_name: str, default_factory: Callable = dict, work_dir: PathLike = '.'):
 		self.section_name = section_name
 		self.work_dir = PathPlus(work_dir)
 		self.default_factory = default_factory

@@ -39,7 +39,7 @@ from consolekit.utils import abort
 # this package
 from dep_checker import check_imports
 
-__all__ = ["cli", "main"]
+__all__ = ["main"]
 
 
 @click.argument(
@@ -62,7 +62,12 @@ __all__ = ["cli", "main"]
 		)
 @colour_option()
 @click_command()
-def main(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colour: Optional[bool]):
+def main(
+		pkg_name: str,
+		req_file: str,
+		allowed_unused: Optional[List[str]],
+		colour: Optional[bool],
+		):
 	"""
 	Tool to check all requirements are actually required.
 	"""
@@ -71,7 +76,12 @@ def main(pkg_name: str, req_file: str, allowed_unused: Optional[List[str]], colo
 		allowed_unused = None
 
 	try:
-		sys.exit(check_imports(pkg_name, req_file=req_file, allowed_unused=allowed_unused, colour=colour))
+		sys.exit(check_imports(
+				pkg_name,
+				req_file=req_file,
+				allowed_unused=allowed_unused,
+				colour=colour,
+				))
 	except FileNotFoundError as e:
 		raise abort(str(e))
 

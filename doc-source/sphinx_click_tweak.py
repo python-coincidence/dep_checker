@@ -69,7 +69,7 @@ class NoHeadingClickDirective(SphinxDirective):
 
 		view = ViewList(content)
 
-		click_node = nodes.paragraph(rawsource="\n".join(content))
+		click_node = nodes.paragraph(rawsource='\n'.join(content))
 		self.state.nested_parse(view, self.content_offset, click_node)  # type: ignore
 
 		click_purger.add_node(self.env, click_node, targetnode, self.lineno)
@@ -79,12 +79,12 @@ class NoHeadingClickDirective(SphinxDirective):
 	def run(self):
 		command = ClickDirective._load_module(self, self.arguments[0])
 
-		if 'prog' not in self.options:
-			raise self.error(':prog: must be specified')
+		if "prog" not in self.options:
+			raise self.error(":prog: must be specified")
 
-		prog_name = self.options.get('prog')
-		show_nested = 'show-nested' in self.options
-		nested = self.options.get('nested')
+		prog_name = self.options.get("prog")
+		show_nested = "show-nested" in self.options
+		nested = self.options.get("nested")
 
 		if show_nested:
 			if nested:
@@ -96,11 +96,11 @@ class NoHeadingClickDirective(SphinxDirective):
 						)
 				nested = NESTED_FULL if show_nested else NESTED_SHORT
 
-		commands = self.options.get('commands')
+		commands = self.options.get("commands")
 
 		return self._generate_nodes(prog_name, command, None, nested, commands)
 
 
 def setup(app):
-	app.add_directive('click', NoHeadingClickDirective)
+	app.add_directive("click", NoHeadingClickDirective)
 	app.connect("env-purge-doc", click_purger.purge_nodes)
