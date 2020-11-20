@@ -35,7 +35,7 @@ from typing import Any, Dict, List, Optional, Tuple
 # 3rd party
 import click
 from consolekit.terminal_colours import Fore, resolve_color_default
-from domdf_python_tools.paths import PathPlus
+from domdf_python_tools.paths import PathPlus, in_directory
 from domdf_python_tools.typing import PathLike
 from shippinglabel.requirements import read_requirements
 from stdlib_list import stdlib_list  # type: ignore
@@ -150,6 +150,7 @@ def check_imports(
 		colour: Optional[bool] = None,
 		name_mapping: Optional[Dict[str, str]] = None,
 		namespace_packages: Optional[List[str]] = None,
+		work_dir: str = '.'
 		) -> int:
 	"""
 	Check imports for the given package, against the given requirements file.
@@ -162,15 +163,19 @@ def check_imports(
 	:no-default colour:
 	:param name_mapping: Optional mapping of requirement names to import names, if they differ.
 	:no-default name_mapping:
+	:param namespace_packages: List of namespace packages, e.g. ``ruamel.yaml``.
+	:no-default namespace_packages:
+	:param work_dir: The directory to find the source of the package in. Useful with the src/ layout.
 
 	| Returns ``0`` if all requirements are used and listed as requirements.
 	| Returns ``1`` is a requirement is unused, or if a package is imported but not listed as a requirement.
 
 	.. versionchanged:: 0.3.1 Added the ``name_mapping`` option.
+
+	.. versionchanged:: 0.4.0 Added the ``work_dir`` option.
 	"""
 
 	ret = 0
-	cwd = PathPlus.cwd()
 	config = reader.visit()
 	colour = resolve_color_default(colour)
 
@@ -186,7 +191,7 @@ def check_imports(
 	req_file = PathPlus(req_file)
 
 	if not req_file.is_absolute():
-		req_file = cwd / req_file
+		req_file = PathPlus.cwd() / req_file
 
 	req_names: List[str] = []
 
@@ -203,35 +208,38 @@ def check_imports(
 	imports: Dict[str, Dict[PathPlus, int]] = defaultdict(dict)
 	# mapping of import name to mapping of filename to lineno where imported
 
-	if not (cwd / pkg_name).exists():
-		raise FileNotFoundError(f"Can't find a package called {pkg_name} in the current directory.")
+	with in_directory(work_dir):
+		cwd = PathPlus.cwd()
 
-	for filename in (cwd / pkg_name.replace('.', '/')).rglob("*.py"):
-		filename = filename.relative_to(cwd)
+		if not (cwd / pkg_name).exists():
+			raise FileNotFoundError(f"Can't find a package called {pkg_name} in the current directory.")
 
-		if filename.parts[0] in {".tox", "venv", ".venv"}:
-			continue
+		for filename in (cwd / pkg_name.replace('.', '/')).rglob("*.py"):
+			filename = filename.relative_to(cwd)
 
-		visitor = Visitor(pkg_name.replace('/', '.'), namespace_packages)  # type: ignore
-		file_content = filename.read_text()
+			if filename.parts[0] in {".tox", "venv", ".venv"}:
+				continue
 
-		for import_name, lineno in visitor.visit(ast.parse(file_content)):
+			visitor = Visitor(pkg_name.replace('/', '.'), namespace_packages)  # type: ignore
+			file_content = filename.read_text()
 
-			if import_name not in req_names:
-				# Not listed as requirement
+			for import_name, lineno in visitor.visit(ast.parse(file_content)):
 
-				if re.match(r".*#\s*nodep.*", file_content.splitlines()[lineno - 1]):
-					# Marked with "# nodep", so the user wants to ignore this
-					continue
+				if import_name not in req_names:
+					# Not listed as requirement
 
-				msg = template.format(name=import_name, lineno=lineno, filename=filename)
-				click.echo(Fore.RED(f"✘ {msg} but not listed as a requirement"), color=colour)
-				ret |= 1
+					if re.match(r".*#\s*nodep.*", file_content.splitlines()[lineno - 1]):
+						# Marked with "# nodep", so the user wants to ignore this
+						continue
 
-			else:
-				# Waiting on mypy updating typeshed re: type: ignore
-				min_lineno = min((imports[import_name].get(filename, lineno), lineno))  # type: ignore
-				imports[import_name][filename] = min_lineno  # type: ignore
+					msg = template.format(name=import_name, lineno=lineno, filename=filename)
+					click.echo(Fore.RED(f"✘ {msg} but not listed as a requirement"), color=colour)
+					ret |= 1
+
+				else:
+					# Waiting on mypy updating typeshed re: type: ignore
+					min_lineno = min((imports[import_name].get(filename, lineno), lineno))  # type: ignore
+					imports[import_name][filename] = min_lineno  # type: ignore
 
 	for req_name in req_names:
 		for filename, lineno in imports[req_name].items():

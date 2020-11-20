@@ -60,6 +60,13 @@ __all__ = ["main"]
 		multiple=True,
 		help="Requirements which are allowed to be unused in the source code."
 		)
+@click.option(
+		"-d",
+		"--work-dir",
+		type=click.STRING,
+		default='.',
+		help="The directory to find the source of the package in. Useful with the src/ layout."
+		)
 @colour_option()
 @click_command()
 def main(
@@ -67,6 +74,7 @@ def main(
 		req_file: str,
 		allowed_unused: Optional[List[str]],
 		colour: Optional[bool],
+		work_dir: str = '.',
 		):
 	"""
 	Tool to check all requirements are actually required.
