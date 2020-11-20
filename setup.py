@@ -13,7 +13,7 @@ sys.path.append('.')
 from __pkginfo__ import *  # pylint: disable=wildcard-import
 
 setup(
-		description='Tool to check all requirements are actually required.',
+		description="Tool to check all requirements are actually required.",
 		extras_require=extras_require,
 		install_requires=install_requires,
 		py_modules=[],
