@@ -17,7 +17,7 @@ In either case options must be placed in the ``[dep_checker]`` section.
 
 	Mapping of requirement names (e.g. "biopython") to the names of packages they provide (e.g. "Bio").
 
-	.. versionadded:: 0.4.0
+	.. versionadded:: 0.4.1
 
 	**Example:**
 
@@ -35,7 +35,7 @@ In either case options must be placed in the ``[dep_checker]`` section.
 	``from namespace.package import object``,
 	but not ``from namespace import package``.
 
-	.. versionadded:: 0.4.0
+	.. versionadded:: 0.4.1
 
 	**Example:**
 
@@ -57,7 +57,7 @@ E.g.:
 
 	import pytest  # nodep
 
-.. versionadded:: 0.4.0
+.. versionadded:: 0.4.1
 
 
 dep-checker
@@ -75,7 +75,7 @@ To do so, add the following to your
 `.pre-commit-config.yaml <https://pre-commit.com/#2-add-a-pre-commit-configuration>`_ file:
 
 .. pre-commit::
-	:rev: 0.4.0
+	:rev: 0.4.1
 	:hooks: dep_checker
 	:args: <PKG_NAME>
 
