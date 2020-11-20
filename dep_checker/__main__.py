@@ -89,6 +89,7 @@ def main(
 				req_file=req_file,
 				allowed_unused=allowed_unused,
 				colour=colour,
+				work_dir=work_dir,
 				))
 	except FileNotFoundError as e:
 		raise abort(str(e))
