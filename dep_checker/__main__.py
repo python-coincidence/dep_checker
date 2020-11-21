@@ -84,13 +84,14 @@ def main(
 		allowed_unused = None
 
 	try:
-		sys.exit(check_imports(
+		ret = check_imports(
 				pkg_name,
 				req_file=req_file,
 				allowed_unused=allowed_unused,
 				colour=colour,
 				work_dir=work_dir,
-				))
+				)
+		sys.exit(ret)
 	except FileNotFoundError as e:
 		raise abort(str(e))
 
