@@ -41,12 +41,16 @@ __all__ = ["AllowedUnused", "NameMapping", "ConfigReader"]
 
 
 class AllowedUnused(ConfigVar):
+	"""
+	List of requirements which are allowed to be unused in the source code.
+	"""
+
 	dtype = List[str]
 	default: List[str] = []
 	__name__ = "allowed_unused"
 
 	@classmethod
-	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
+	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:  # noqa: D102
 		if raw_config_vars is None:
 			raw_config_vars = {}
 
@@ -69,6 +73,23 @@ class AllowedUnused(ConfigVar):
 
 
 class NamespacePackages(ConfigVar):
+	"""
+	List of namespace packages, e.g. ``ruamel.yaml``.
+
+	This currently only handles imports in the form ``import namespace.package`` or
+	``from namespace.package import object``, but not ``from namespace import package``.
+
+	.. versionadded:: 0.4.1
+
+	**Example:**
+
+	.. code-block:: ini
+
+		[dep_checker]
+		namespace_packages =
+			ruamel.yaml
+	"""
+
 	dtype = List[str]
 	rtype = dict
 	default: Dict[str, List[str]] = {}
@@ -104,12 +125,26 @@ class NamespacePackages(ConfigVar):
 
 
 class NameMapping(ConfigVar):
+	"""
+	Mapping of requirement names (e.g. "biopython") to the names of packages they provide (e.g. "Bio").
+
+	.. versionadded:: 0.4.1
+
+	**Example:**
+
+	.. code-block:: ini
+
+		[dep_checker]
+		name_mapping =
+			biopython = Bio
+	"""
+
 	dtype = List[str]
 	default: List[str] = []
 	__name__ = "name_mapping"
 
 	@classmethod
-	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
+	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:  # noqa: D102
 		if raw_config_vars is None:
 			raw_config_vars = {}
 
@@ -137,6 +172,13 @@ class NameMapping(ConfigVar):
 
 
 class ConfigReader:
+	"""
+	Read and parse configuration files.
+
+	:param section_name:
+	:param default_factory:
+	:param work_dir:
+	"""
 
 	def __init__(self, section_name: str, default_factory: Callable = dict, work_dir: PathLike = '.'):
 		self.section_name = section_name
@@ -144,6 +186,12 @@ class ConfigReader:
 		self.default_factory = default_factory
 
 	def visit_tox_ini(self) -> Optional[Dict]:
+		"""
+		Visit ``tox.ini`` and parse the configuration from it.
+
+		Returns :py:obj:`None` if the file doesn't exist, or if it doesn't have a ``dep_checker`` section.
+		"""
+
 		if (self.work_dir / "tox.ini").is_file():
 			tox_ini = ConfigParser()
 			tox_ini.read(self.work_dir / "tox.ini")
@@ -154,6 +202,12 @@ class ConfigReader:
 		return None
 
 	def visit_setup_cfg(self) -> Optional[Dict]:
+		"""
+		Visit ``setup.cfg`` and parse the configuration from it.
+
+		Returns :py:obj:`None` if the file doesn't exist, or if it doesn't have a ``dep_checker`` section.
+		"""
+
 		if (self.work_dir / "setup.cfg").is_file():
 			tox_ini = ConfigParser()
 			tox_ini.read(self.work_dir / "setup.cfg")
@@ -166,6 +220,10 @@ class ConfigReader:
 	# TODO: pyproject.toml, repo_helper.yml
 
 	def visit(self) -> Any:
+		"""
+		Visit all config files and parse the configuration from the first one containing the ``dep_checker`` section.
+		"""
+
 		for file in [
 				self.visit_tox_ini,
 				]:
