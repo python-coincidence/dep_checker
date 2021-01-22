@@ -237,9 +237,8 @@ def check_imports(
 					ret |= 1
 
 				else:
-					# Waiting on mypy updating typeshed re: type: ignore
-					min_lineno = min((imports[import_name].get(filename, lineno), lineno))  # type: ignore
-					imports[import_name][filename] = min_lineno  # type: ignore
+					min_lineno = min((imports[import_name].get(filename, lineno), lineno))
+					imports[import_name][filename] = min_lineno
 
 	for req_name in req_names:
 		for filename, lineno in imports[req_name].items():
