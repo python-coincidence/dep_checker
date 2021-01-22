@@ -28,3 +28,13 @@ extra_sphinx_extensions:
  - sphinx_toolbox.pre_commit
 
 mypy_version: "0.800"
+
+classifiers:
+ - 'Development Status :: 4 - Beta'
+ - 'Environment :: Console'
+ - 'Intended Audience :: Developers'
+
+keywords:
+ - dependencies
+ - linter
+ - pre-commit
