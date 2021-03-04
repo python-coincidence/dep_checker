@@ -36,3 +36,5 @@ keywords:
  - dependencies
  - linter
  - pre-commit
+
+min_coverage: 84
