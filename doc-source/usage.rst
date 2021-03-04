@@ -5,10 +5,10 @@ Usage
 Configuration
 -----------------
 
-| ``dep-checker`` can be configured via the ``[tool.dep_checker]`` table
-of ``pyproject.toml``.
-| The configuration can also be placed in the ``[dep_checker]`` section of
-``tox.ini`` or ``setup.cfg``.
+| ``dep-checker`` can be configured via the ``[tool.dep_checker]`` table of ``pyproject.toml``.
+| The configuration can also be placed in the ``[dep_checker]`` section of ``tox.ini`` or ``setup.cfg``.
+
+|
 
 .. versionchanged:: 0.5.0
 
@@ -26,6 +26,7 @@ of ``pyproject.toml``.
 		# pyproject.toml
 		[tool.dep_checker]
 		allowed_unused = ["pytest", "sphinx"]
+
 
 	.. code-block:: ini
 
@@ -48,12 +49,14 @@ of ``pyproject.toml``.
 		[tool.dep_checker.name_mapping]
 		biopython = "Bio"
 
+
 	.. code-block:: ini
 
 		# tox.ini / setup.cfg
 		[dep_checker]
 		name_mapping =
 			biopython = Bio
+
 
 .. confval:: namespace_packages
 
@@ -73,6 +76,7 @@ of ``pyproject.toml``.
 		[tool.dep_checker]
 		namespace_packages = ["ruamel.yaml", "jaraco.docker"]
 
+
 	.. code-block:: ini
 
 		# tox.ini / setup.cfg
@@ -90,6 +94,7 @@ E.g.:
 .. code-block:: python
 
 	import pytest  # nodep
+
 
 .. versionadded:: 0.4.1
 

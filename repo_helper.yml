@@ -38,3 +38,4 @@ keywords:
  - pre-commit
 
 min_coverage: 84
+sphinx_html_theme: furo
