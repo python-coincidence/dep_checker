@@ -262,6 +262,8 @@ def iter_files_to_check(basepath: PathLike, pkg_name: str) -> Iterator[PathPlus]
 	:raises FileNotFoundError: If neither :file:`{<pkg_name>}.py` or the directory ``pkg_name`` is found.
 	"""
 
+	basepath = PathPlus(basepath)
+
 	if (basepath / f"{pkg_name}.py").is_file():
 		yield PathPlus(f"{pkg_name}.py")
 		return

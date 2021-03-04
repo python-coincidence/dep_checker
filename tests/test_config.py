@@ -33,16 +33,21 @@ class TestIni:
 			"config",
 			[
 					pytest.param("[dep_checker]\nnamespace_packages = namespace.foo", id="foo"),
-					pytest.param("[dep_checker]\nnamespace_packages = namespace.foo,namespace.bar", id="foo,bar"),
 					pytest.param(
-							"[dep_checker]\nnamespace_packages = namespace.foo, namespace.bar", id="foo, bar"
+							"[dep_checker]\nnamespace_packages = namespace.foo,namespace.bar",
+							id="foo,bar",
 							),
 					pytest.param(
-							"[dep_checker]\nnamespace_packages =  namespace.foo, namespace.bar", id=" foo, bar"
+							"[dep_checker]\nnamespace_packages = namespace.foo, namespace.bar",
+							id="foo, bar",
+							),
+					pytest.param(
+							"[dep_checker]\nnamespace_packages =  namespace.foo, namespace.bar",
+							id=" foo, bar",
 							),
 					pytest.param(
 							"[dep_checker]\nnamespace_packages =\n    namespace.foo\n    namespace.bar",
-							id="foo\\nbar"
+							id="foo\\nbar",
 							),
 					]
 			)
@@ -61,10 +66,14 @@ class TestIni:
 					pytest.param("[dep_checker]\nname_mapping = foo=bob", id="foo=bob"),
 					pytest.param("[dep_checker]\nname_mapping = foo :bob", id="foo :bob"),
 					pytest.param("[dep_checker]\nname_mapping = foo =bob", id="foo =bob"),
-					pytest.
-					param("[dep_checker]\nname_mapping =\n    foo: bob\n   bar =alice", id="foo: bob\nbar =alice"),
-					pytest.
-					param("[dep_checker]\nname_mapping =\n    foo:bob\n   bar = alice", id="foo:bob\nbar = alice"),
+					pytest.param(
+							"[dep_checker]\nname_mapping =\n    foo: bob\n   bar =alice",
+							id="foo: bob\nbar =alice",
+							),
+					pytest.param(
+							"[dep_checker]\nname_mapping =\n    foo:bob\n   bar = alice",
+							id="foo:bob\nbar = alice",
+							),
 					]
 			)
 	def test_name_mapping(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
@@ -88,34 +97,41 @@ class TestToml:
 					]
 			)
 	def test_allow_unused(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
-		config = toml.loads(config)["tool"]["dep_checker"]
-		advanced_data_regression.check(AllowedUnused.get(config))
+		toml_config = toml.loads(config)["tool"]["dep_checker"]
+		advanced_data_regression.check(AllowedUnused.get(toml_config))
 
 	@pytest.mark.parametrize(
 			"config",
 			[
-					pytest.param("[tool.dep_checker]\nnamespace_packages = 'namespace.foo'", id="foo"),
 					pytest.param(
-							"[tool.dep_checker]\nnamespace_packages = 'namespace.foo,namespace.bar'", id="foo,bar"
+							"[tool.dep_checker]\nnamespace_packages = 'namespace.foo'",
+							id="foo",
+							),
+					pytest.param(
+							"[tool.dep_checker]\nnamespace_packages = 'namespace.foo,namespace.bar'",
+							id="foo,bar",
 							),
 					pytest.param(
 							"[tool.dep_checker]\nnamespace_packages = 'namespace.foo, namespace.bar'",
-							id="foo, bar"
+							id="foo, bar",
 							),
 					pytest.param(
 							"[tool.dep_checker]\nnamespace_packages = ' namespace.foo, namespace.bar'",
-							id=" foo, bar"
+							id=" foo, bar",
 							),
-					pytest.param("[tool.dep_checker]\nnamespace_packages = ['namespace.foo']", id="list1"),
+					pytest.param(
+							"[tool.dep_checker]\nnamespace_packages = ['namespace.foo']",
+							id="list1",
+							),
 					pytest.param(
 							"[tool.dep_checker]\nnamespace_packages = ['namespace.foo', 'namespace.bar']",
-							id="list2"
+							id="list2",
 							),
 					]
 			)
 	def test_namespace_packages(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
-		config = toml.loads(config)["tool"]["dep_checker"]
-		advanced_data_regression.check(NamespacePackages.get(config))
+		toml_config = toml.loads(config)["tool"]["dep_checker"]
+		advanced_data_regression.check(NamespacePackages.get(toml_config))
 
 	@pytest.mark.parametrize(
 			"config",
@@ -127,8 +143,8 @@ class TestToml:
 					]
 			)
 	def test_name_mapping(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
-		config = toml.loads(config)["tool"]["dep_checker"]
-		advanced_data_regression.check(NameMapping.get(config))
+		toml_config = toml.loads(config)["tool"]["dep_checker"]
+		advanced_data_regression.check(NameMapping.get(toml_config))
 
 
 @pytest.mark.parametrize("filename", ["tox.ini", "setup.cfg"])

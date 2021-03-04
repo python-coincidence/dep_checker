@@ -107,7 +107,7 @@ class NamespacePackages(ConfigVar):
 	__name__ = "namespace_packages"
 
 	@classmethod
-	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:
+	def validate(cls, raw_config_vars: Optional[Dict[str, Any]] = None) -> Any:  # noqa: D102
 		if raw_config_vars is None:
 			raw_config_vars = {}
 
