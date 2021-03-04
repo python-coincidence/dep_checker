@@ -20,13 +20,14 @@ def single_file_project(tmp_pathplus: PathPlus):
 			"import pytest",
 			"import chemistry_tools",
 			"import pathlib2",
-			"import typing_extensions",
+			"from typing_extensions import TypedDict",
 			"import domdf_python_tools",
 			"import consolekit",
 			"import click",
 			"import pandas",
 			"import ruamel.yaml",
 			"import sphinx  # nodep",
+			"import Bio",
 			"if False:",
 			"\timport requests"
 			])
@@ -35,6 +36,7 @@ def single_file_project(tmp_pathplus: PathPlus):
 			"pandas",
 			"coincidence",
 			"numpy",
+			"biopython",
 			])
 
 	return tmp_pathplus
@@ -51,13 +53,14 @@ def package_project(tmp_pathplus: PathPlus):
 			"import pytest",
 			"import chemistry_tools",
 			"import pathlib2",
-			"import typing_extensions",
+			"from typing_extensions import TypedDict",
 			"import domdf_python_tools",
 			"import consolekit",
 			"import click",
 			"import pandas",
 			"import ruamel.yaml",
 			"import sphinx  # nodep",
+			"import Bio",
 			"if False:",
 			"\timport requests"
 			])
@@ -66,6 +69,7 @@ def package_project(tmp_pathplus: PathPlus):
 			"pandas",
 			"coincidence",
 			"numpy",
+			"biopython",
 			])
 
 	return tmp_pathplus
@@ -114,3 +118,31 @@ def test_cli_package(package_project: PathPlus, file_regression: FileRegressionF
 
 
 # TODO: test with the different config options
+
+
+@pytest.mark.parametrize(
+		"config",
+		[
+				pytest.param({"allowed_unused": ["numpy"]}, id="allow_numpy"),
+				pytest.param({"name_mapping": {"biopython": "Bio"}}, id="name_mapping_bio"),
+				pytest.param({"namespace_packages": ["ruamel.yaml"]}, id="namespace_ruamel"),
+				pytest.param(
+						{"allowed_unused": ["numpy"], "name_mapping": {"biopython": "Bio"}},
+						id="allow_numpy,name_mapping_bio",
+						),
+				pytest.param(
+						{"namespace_packages": ["ruamel.yaml"], "name_mapping": {"Bio": "biopython"}},
+						id="name_mapping_bio,namespace_ruamel",
+						),
+				]
+		)
+def test_with_config(
+		single_file_project: PathPlus, capsys, advanced_data_regression: AdvancedDataRegressionFixture, config
+		):
+	assert check_imports(
+			"my_project",
+			work_dir=single_file_project,
+			colour=False,
+			**config,
+			) == 1
+	advanced_data_regression.check(capsys.readouterr())

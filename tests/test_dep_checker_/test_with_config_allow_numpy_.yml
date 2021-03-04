@@ -11,5 +11,4 @@ out:
 - ✘ biopython never imported
 - ✘ coincidence never imported
 - ✔ consolekit imported on line 10 of my_project.py
-- ✘ numpy never imported
 - ✔ pandas imported on line 12 of my_project.py

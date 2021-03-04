@@ -52,10 +52,9 @@ __email__: str = "dominic@davis-foster.co.uk"
 
 __all__ = ["template", "check_imports"]
 
-
-if sys.version_info < (3, 10):
+if sys.version_info < (3, 10):  # pragma: no cover (<py310)
 	libraries = stdlib_list()
-else:
+else:  # pragma: no cover (py310+)
 	libraries = sys.stdlib_module_names
 
 #: The template to use when printing output.
@@ -279,7 +278,7 @@ def iter_files_to_check(basepath: PathLike, pkg_name: str) -> Iterator[PathPlus]
 	for filename in (basepath / pkg_name.replace('.', '/')).rglob("*.py"):
 		filename = filename.relative_to(basepath)
 
-		if filename.parts[0] in {".tox", "venv", ".venv"}:
+		if filename.parts[0] in {".tox", "venv", ".venv"}:  # pragma: no cover
 			continue
 
 		yield filename

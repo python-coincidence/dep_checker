@@ -10,6 +10,8 @@ out:
   as a requirement
 - ✘ click imported on line 11 of my_project/__init__.py but not listed as a requirement
 - ✘ ruamel imported on line 13 of my_project/__init__.py but not listed as a requirement
+- ✘ Bio imported on line 15 of my_project/__init__.py but not listed as a requirement
+- ✘ biopython never imported
 - ✘ coincidence never imported
 - ✔ consolekit imported on line 10 of my_project/__init__.py
 - ✘ numpy never imported
