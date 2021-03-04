@@ -230,7 +230,7 @@ def check_imports(
 						# Marked with "# nodep", so the user wants to ignore this
 						continue
 
-					msg = template.format(name=import_name, lineno=lineno, filename=filename)
+					msg = template.format(name=import_name, lineno=lineno, filename=filename.as_posix())
 					click.echo(Fore.RED(f"✘ {msg} but not listed as a requirement"), color=colour)
 					ret |= 1
 
@@ -241,7 +241,7 @@ def check_imports(
 	for req_name in req_names:
 		for filename, lineno in imports[req_name].items():
 			# Imported and listed as requirement
-			msg = template.format(name=req_name, lineno=lineno, filename=filename)
+			msg = template.format(name=req_name, lineno=lineno, filename=filename.as_posix())
 			click.echo(Fore.GREEN(f"✔ {msg}"), color=colour)
 			break
 		else:
@@ -274,7 +274,7 @@ def iter_files_to_check(basepath: PathLike, pkg_name: str) -> Iterator[PathPlus]
 		return
 
 	if not (basepath / pkg_name).exists():
-		raise FileNotFoundError(f"Can't find a package called {pkg_name!r} in {basepath}.")
+		raise FileNotFoundError(f"Can't find a package called {pkg_name!r} in {basepath.as_posix()}.")
 
 	for filename in (basepath / pkg_name.replace('.', '/')).rglob("*.py"):
 		filename = filename.relative_to(basepath)
