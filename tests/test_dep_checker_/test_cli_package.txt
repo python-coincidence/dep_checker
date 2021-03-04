@@ -1,0 +1,11 @@
+✘ pytest imported on line 5 of my_project/__init__.py but not listed as a requirement
+✘ chemistry_tools imported on line 6 of my_project/__init__.py but not listed as a requirement
+✘ pathlib2 imported on line 7 of my_project/__init__.py but not listed as a requirement
+✘ typing_extensions imported on line 8 of my_project/__init__.py but not listed as a requirement
+✘ domdf_python_tools imported on line 9 of my_project/__init__.py but not listed as a requirement
+✘ click imported on line 11 of my_project/__init__.py but not listed as a requirement
+✘ ruamel imported on line 13 of my_project/__init__.py but not listed as a requirement
+✘ coincidence never imported
+✔ consolekit imported on line 10 of my_project/__init__.py
+✘ numpy never imported
+✔ pandas imported on line 12 of my_project/__init__.py

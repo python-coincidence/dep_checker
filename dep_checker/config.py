@@ -33,11 +33,22 @@ from configparser import ConfigParser
 from typing import Any, Callable, Dict, List, Optional
 
 # 3rd party
+import toml
 from configconfig.configvar import ConfigVar
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
 
-__all__ = ["AllowedUnused", "NameMapping", "ConfigReader"]
+__all__ = ["AllowedUnused", "NameMapping", "ConfigReader", "NamespacePackages"]
+
+
+def list_from_string(string: str) -> List[str]:
+	"""
+	Parse a string containing multiple values (separated by newlines or commas) into a list of values.
+
+	:param string:
+	"""
+
+	return list(filter(bool, map(str.strip, re.split("[\n,]", string))))
 
 
 class AllowedUnused(ConfigVar):
@@ -60,7 +71,7 @@ class AllowedUnused(ConfigVar):
 		if cls.__name__ in raw_config_vars:
 			value = raw_config_vars[cls.__name__]
 			if isinstance(value, str):
-				value = list(filter(bool, value.splitlines()))
+				value = list_from_string(value)
 
 			if isinstance(value, list):
 				for element in value:
@@ -106,7 +117,7 @@ class NamespacePackages(ConfigVar):
 		if cls.__name__ in raw_config_vars:
 			value = raw_config_vars[cls.__name__]
 			if isinstance(value, str):
-				value = list(filter(bool, value.splitlines()))
+				value = list_from_string(value)
 
 			if isinstance(value, list):
 				for element in value:
@@ -217,7 +228,20 @@ class ConfigReader:
 
 		return None
 
-	# TODO: pyproject.toml, repo_helper.yml
+	def visit_pyproject_toml(self) -> Optional[Dict]:
+		"""
+		Visit ``pyproject.toml`` and parse the configuration from it.
+
+		Returns :py:obj:`None` if the file doesn't exist, or if it doesn't have a ``dep_checker`` section.
+		"""
+
+		if (self.work_dir / "pyproject.toml").is_file():
+			config = toml.loads((self.work_dir / "pyproject.toml").read_text())
+
+			if "tool" in config and self.section_name in config["tool"]:
+				return config["tool"][self.section_name]
+
+		return None
 
 	def visit(self) -> Any:
 		"""
@@ -225,7 +249,9 @@ class ConfigReader:
 		"""
 
 		for file in [
+				self.visit_pyproject_toml,
 				self.visit_tox_ini,
+				self.visit_setup_cfg,
 				]:
 			ret = file()
 			if ret is not None:

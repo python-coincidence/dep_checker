@@ -1,0 +1,3 @@
+allowed_unused: foo
+name_mapping: 'foo: bob'
+namespace_packages: namespace.bar

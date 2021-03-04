@@ -33,14 +33,22 @@ remove_redundant_aliases = true
 default_section = "THIRDPARTY"
 known_third_party = [
     "click",
+    "coincidence",
     "configconfig",
     "consolekit",
+    "coverage",
+    "coverage_pyver_pragma",
     "domdf_python_tools",
     "github",
+    "pytest",
+    "pytest_cov",
+    "pytest_randomly",
+    "pytest_timeout",
     "repo_helper",
     "requests",
     "shippinglabel",
     "stdlib_list",
+    "toml",
 ]
 known_first_party = "dep_checker"
 line_length = 115

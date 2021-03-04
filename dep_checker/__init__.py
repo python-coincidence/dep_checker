@@ -5,7 +5,7 @@
 Tool to check all requirements are actually required.
 """
 #
-#  Copyright © 2020 Dominic Davis-Foster <dominic@davis-foster.co.uk>
+#  Copyright © 2020-2021 Dominic Davis-Foster <dominic@davis-foster.co.uk>
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ Tool to check all requirements are actually required.
 import ast
 import re
 from collections import defaultdict
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 # 3rd party
 import click
@@ -44,7 +44,7 @@ from stdlib_list import stdlib_list  # type: ignore
 from dep_checker.config import AllowedUnused, ConfigReader, NameMapping, NamespacePackages
 
 __author__: str = "Dominic Davis-Foster"
-__copyright__: str = "2020 Dominic Davis-Foster"
+__copyright__: str = "2020-2021 Dominic Davis-Foster"
 __license__: str = "MIT License"
 __version__: str = "0.4.1"
 __email__: str = "dominic@davis-foster.co.uk"
@@ -150,7 +150,7 @@ def check_imports(
 		colour: Optional[bool] = None,
 		name_mapping: Optional[Dict[str, str]] = None,
 		namespace_packages: Optional[List[str]] = None,
-		work_dir: str = '.'
+		work_dir: PathLike = '.'
 		) -> int:
 	"""
 	Check imports for the given package, against the given requirements file.
@@ -188,10 +188,11 @@ def check_imports(
 	if namespace_packages is None:
 		namespace_packages = NamespacePackages.get(config)
 
+	work_dir = PathPlus(work_dir)
 	req_file = PathPlus(req_file)
 
 	if not req_file.is_absolute():
-		req_file = PathPlus.cwd() / req_file
+		req_file = work_dir / req_file
 
 	req_names: List[str] = []
 
@@ -209,16 +210,8 @@ def check_imports(
 	# mapping of import name to mapping of filename to lineno where imported
 
 	with in_directory(work_dir):
-		cwd = PathPlus.cwd()
 
-		if not (cwd / pkg_name).exists():
-			raise FileNotFoundError(f"Can't find a package called {pkg_name} in the current directory.")
-
-		for filename in (cwd / pkg_name.replace('.', '/')).rglob("*.py"):
-			filename = filename.relative_to(cwd)
-
-			if filename.parts[0] in {".tox", "venv", ".venv"}:
-				continue
+		for filename in iter_files_to_check(work_dir, pkg_name):
 
 			visitor = Visitor(pkg_name.replace('/', '.'), namespace_packages)  # type: ignore
 			file_content = filename.read_text()
@@ -253,3 +246,33 @@ def check_imports(
 				ret |= 1
 
 	return ret
+
+
+def iter_files_to_check(basepath: PathLike, pkg_name: str) -> Iterator[PathPlus]:
+	"""
+	Returns an iterator over all files in ``pkg_name``.
+
+	If ``pkg_name`` resolves to a single-file module, that is the only element of the iterator.
+
+	.. versionadded:: $VERSION
+
+	:param basepath:
+	:param pkg_name:
+
+	:raises FileNotFoundError: If neither :file:`{<pkg_name>}.py` or the directory ``pkg_name`` is found.
+	"""
+
+	if (basepath / f"{pkg_name}.py").is_file():
+		yield PathPlus(f"{pkg_name}.py")
+		return
+
+	if not (basepath / pkg_name).exists():
+		raise FileNotFoundError(f"Can't find a package called {pkg_name!r} in {basepath}.")
+
+	for filename in (basepath / pkg_name.replace('.', '/')).rglob("*.py"):
+		filename = filename.relative_to(basepath)
+
+		if filename.parts[0] in {".tox", "venv", ".venv"}:
+			continue
+
+		yield filename
