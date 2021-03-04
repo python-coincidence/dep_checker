@@ -29,6 +29,7 @@ Tool to check all requirements are actually required.
 # stdlib
 import ast
 import re
+import sys
 from collections import defaultdict
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
@@ -51,7 +52,11 @@ __email__: str = "dominic@davis-foster.co.uk"
 
 __all__ = ["template", "check_imports"]
 
-libraries = stdlib_list()
+
+if sys.version_info < (3, 10):
+	libraries = stdlib_list()
+else:
+	libraries = sys.stdlib_module_names
 
 #: The template to use when printing output.
 template = "{name} imported on line {lineno} of {filename}"
