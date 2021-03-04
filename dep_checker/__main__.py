@@ -42,16 +42,13 @@ from dep_checker import check_imports
 __all__ = ["main"]
 
 
-@click.argument(
-		"pkg-name",
-		type=click.STRING,
-		)
+@colour_option()
 @click.option(
-		"--req-file",
+		"-d",
+		"--work-dir",
 		type=click.STRING,
-		metavar="FILENAME",
-		default="requirements.txt",
-		help="The requirements file.",
+		default='.',
+		help="The directory to find the source of the package in. Useful with the src/ layout."
 		)
 @click.option(
 		"-a",
@@ -61,13 +58,16 @@ __all__ = ["main"]
 		help="Requirements which are allowed to be unused in the source code."
 		)
 @click.option(
-		"-d",
-		"--work-dir",
+		"--req-file",
 		type=click.STRING,
-		default='.',
-		help="The directory to find the source of the package in. Useful with the src/ layout."
+		metavar="FILENAME",
+		default="requirements.txt",
+		help="The requirements file.",
 		)
-@colour_option()
+@click.argument(
+		"pkg-name",
+		type=click.STRING,
+		)
 @click_command()
 def main(
 		pkg_name: str,

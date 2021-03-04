@@ -5,12 +5,33 @@ Usage
 Configuration
 -----------------
 
-``dep-checker`` can be configured via ``tox.ini`` or ``setup.cfg``
-In either case options must be placed in the ``[dep_checker]`` section.
+| ``dep-checker`` can be configured via the ``[tool.dep_checker]`` table
+of ``pyproject.toml``.
+| The configuration can also be placed in the ``[dep_checker]`` section of
+``tox.ini`` or ``setup.cfg``.
+
+.. versionchanged:: 0.5.0
+
+	Added support for ``pyproject.toml``
+
 
 .. confval:: allowed_unused
 
 	List of requirements which are allowed to be unused in the source code.
+
+	**Examples:**
+
+	.. code-block:: TOML
+
+		# pyproject.toml
+		[tool.dep_checker]
+		allowed_unused = ["pytest", "sphinx"]
+
+	.. code-block:: ini
+
+		# tox.ini / setup.cfg
+		[dep_checker]
+		allowed_unused = pytest, sphinx
 
 
 .. confval:: name_mapping
@@ -19,10 +40,17 @@ In either case options must be placed in the ``[dep_checker]`` section.
 
 	.. versionadded:: 0.4.1
 
-	**Example:**
+	**Examples:**
+
+	.. code-block:: TOML
+
+		# pyproject.toml
+		[tool.dep_checker.name_mapping]
+		biopython = "Bio"
 
 	.. code-block:: ini
 
+		# tox.ini / setup.cfg
 		[dep_checker]
 		name_mapping =
 			biopython = Bio
@@ -37,13 +65,19 @@ In either case options must be placed in the ``[dep_checker]`` section.
 
 	.. versionadded:: 0.4.1
 
-	**Example:**
+	**Examples:**
+
+	.. code-block:: TOML
+
+		# pyproject.toml
+		[tool.dep_checker]
+		namespace_packages = ["ruamel.yaml", "jaraco.docker"]
 
 	.. code-block:: ini
 
+		# tox.ini / setup.cfg
 		[dep_checker]
-		namespace_packages =
-			ruamel.yaml
+		namespace_packages = ruamel.yaml, jaraco.docker
 
 
 Ignoring imports that aren't listed as requirements
@@ -79,4 +113,9 @@ To do so, add the following to your
 	:hooks: dep_checker
 	:args: <PKG_NAME>
 
-``<PKG_NAME>`` should be replaced with the name of the package to check, e.g. ``consolekit``.
+``<PKG_NAME>`` should be replaced with the name of the package to check, e.g. ``consolekit``:
+
+.. pre-commit::
+	:rev: 0.4.1
+	:hooks: dep_checker
+	:args: consolekit
