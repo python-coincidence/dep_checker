@@ -1,3 +1,7 @@
+# stdlib
+import ast
+from typing import List
+
 # 3rd party
 import pytest
 from coincidence import AdvancedDataRegressionFixture
@@ -6,13 +10,13 @@ from domdf_python_tools.paths import PathPlus, in_directory
 from pytest_regressions.file_regression import FileRegressionFixture
 
 # this package
-from dep_checker import check_imports
+from dep_checker import check_imports, is_type_checking
 from dep_checker.__main__ import main
 
 
 @pytest.fixture()
-def single_file_project(tmp_pathplus: PathPlus):
-	(tmp_pathplus / "my_project.py").write_lines([
+def imports() -> List[str]:
+	return [
 			"import collections",
 			"import shutil",
 			"import pathlib",
@@ -28,9 +32,21 @@ def single_file_project(tmp_pathplus: PathPlus):
 			"import ruamel.yaml",
 			"import sphinx  # nodep",
 			"import Bio",
+			"from . import foo",
 			"if False:",
-			"\timport requests"
-			])
+			"\timport requests",
+			'',
+			"try:",
+			"\timport virtualenv",
+			"except ImportError:",
+			"\timport venv",
+			'',
+			]
+
+
+@pytest.fixture()
+def single_file_project(tmp_pathplus: PathPlus, imports):
+	(tmp_pathplus / "my_project.py").write_lines(imports)
 	(tmp_pathplus / "requirements.txt").write_lines([
 			"consolekit",
 			"pandas",
@@ -43,27 +59,9 @@ def single_file_project(tmp_pathplus: PathPlus):
 
 
 @pytest.fixture()
-def package_project(tmp_pathplus: PathPlus):
+def package_project(tmp_pathplus: PathPlus, imports):
 	(tmp_pathplus / "my_project").mkdir()
-	(tmp_pathplus / "my_project" / "__init__.py").write_lines([
-			"import collections",
-			"import shutil",
-			"import pathlib",
-			"import os",
-			"import pytest",
-			"import chemistry_tools",
-			"import pathlib2",
-			"from typing_extensions import TypedDict",
-			"import domdf_python_tools",
-			"import consolekit",
-			"import click",
-			"import pandas",
-			"import ruamel.yaml",
-			"import sphinx  # nodep",
-			"import Bio",
-			"if False:",
-			"\timport requests"
-			])
+	(tmp_pathplus / "my_project" / "__init__.py").write_lines(imports)
 	(tmp_pathplus / "requirements.txt").write_lines([
 			"consolekit",
 			"pandas",
@@ -146,3 +144,27 @@ def test_with_config(
 			**config,
 			) == 1
 	advanced_data_regression.check(capsys.readouterr())
+
+
+@pytest.mark.parametrize(
+		"source, expected",
+		[
+				pytest.param("if False:\n\tpass", True, id="False"),
+				pytest.param(
+						"from typing import TYPE_CHECKING\nif TYPE_CHECKING:\n\tpass", True, id="TYPE_CHECKING"
+						),
+				pytest.param("import typing\nif typing.TYPE_CHECKING:\n\tpass", True, id="typing.TYPE_CHECKING"),
+				pytest.
+				param("import typing\nimport foo\nif typing.TYPE_CHECKING or foo.BAR:\n\tpass", True, id="BoolOp"),
+				pytest.param("import sys\nif sys.version_info < (3, 10):\n\tpass", False, id="sys.version_info"),
+				]
+		)
+def test_is_type_checking(source: str, expected: bool):
+	tree = ast.parse(source)
+
+	class Visitor(ast.NodeVisitor):
+
+		def visit_If(self, node: ast.If):
+			assert is_type_checking(node.test) is expected
+
+	Visitor().visit(tree)

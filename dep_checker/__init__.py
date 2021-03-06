@@ -52,9 +52,9 @@ __email__: str = "dominic@davis-foster.co.uk"
 
 __all__ = ["template", "check_imports"]
 
-if sys.version_info < (3, 10):  # pragma: no cover (<py310)
+if sys.version_info < (3, 10):  # pragma: no cover (py310+)
 	libraries = stdlib_list()
-else:  # pragma: no cover (py310+)
+else:  # pragma: no cover (<py310)
 	libraries = sys.stdlib_module_names
 
 #: The template to use when printing output.
@@ -101,37 +101,40 @@ class Visitor(ast.NodeVisitor):
 
 	def visit_Try(self, node: ast.Try) -> Any:
 		for handler in node.handlers:
-			if isinstance(handler.type, ast.Attribute):
-				# print(handler.type.value.id)
-				# print(handler.type.attr)
-				pass
-			elif isinstance(handler.type, ast.Name):
+			if isinstance(handler.type, ast.Name):
 				# print(handler.type.id)
-				if handler.type.id in {"ImportError", "ModuleNotFoundError"}:
-					# TODO: check guarded imports
-					# print("Guarded")
-					pass
-				else:
+
+				# TODO: check guarded imports
+
+				if handler.type.id not in {"ImportError", "ModuleNotFoundError"}:
 					self.generic_visit(node)
-			elif handler.type is None:
-				# print(None)
-				pass
-			else:
-				# raise NotImplementedError(type(handler.type))
-				pass
+
+	# def visit_Try(self, node: ast.Try) -> Any:
+	# 	for handler in node.handlers:
+	# 		if isinstance(handler.type, ast.Attribute):
+	# 			# print(handler.type.value.id)
+	# 			# print(handler.type.attr)
+	# 			pass
+	# 		elif isinstance(handler.type, ast.Name):
+	# 			# print(handler.type.id)
+	# 			if handler.type.id in {"ImportError", "ModuleNotFoundError"}:
+	# 				# TODO: check guarded imports
+	# 				# print("Guarded")
+	# 				pass
+	# 			else:
+	# 				self.generic_visit(node)
+	# 		elif handler.type is None:
+	# 			# print(None)
+	# 			pass
+	# 		else:
+	# 			# raise NotImplementedError(type(handler.type))
+	# 			pass
 
 	def visit_If(self, node: ast.If) -> Any:
-		if is_type_checking(node.test):
-			# TODO: check guarded imports
-			# print("Guarded")
-			return None
+		# TODO: check guarded imports
 
-		elif isinstance(node.test, ast.BoolOp):
-			for value in node.test.values:
-				if is_type_checking(value):
-					return None
-
-		self.generic_visit(node)
+		if not is_type_checking(node.test):
+			self.generic_visit(node)
 
 
 def is_type_checking(node) -> bool:
@@ -141,6 +144,11 @@ def is_type_checking(node) -> bool:
 		return True
 	elif isinstance(node, ast.Attribute) and node.attr == "TYPE_CHECKING":
 		return True
+	elif isinstance(node, ast.BoolOp):
+		for value in node.values:
+			if is_type_checking(value):
+				return True
+
 	return False
 
 
