@@ -102,8 +102,8 @@ class NamespacePackages(ConfigVar):
 	"""
 
 	dtype = List[str]
-	rtype = dict
-	default: Dict[str, List[str]] = {}
+	rtype = List[str]
+	default: List[str] = []
 	__name__ = "namespace_packages"
 
 	@classmethod
@@ -123,12 +123,6 @@ class NamespacePackages(ConfigVar):
 				for element in value:
 					if not isinstance(element, str):
 						raise ValueError(f"'{cls.__name__}' must be a list of strings") from None
-
-			namespaces = defaultdict(list)
-
-			for name in value:
-				namespace, pkg = name.rsplit('.')
-				namespaces[namespace].append(pkg)
 
 			return value
 
@@ -177,7 +171,7 @@ class NameMapping(ConfigVar):
 			if not isinstance(value, dict):
 				raise ValueError(f"'{cls.__name__}' must be a dictionary") from None
 
-			return {str(k): str(v) for k, v in value.items()}
+			return {str(k).replace('-', '_'): str(v) for k, v in value.items()}
 
 		return cls.default[:]
 
