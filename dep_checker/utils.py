@@ -2,7 +2,7 @@
 #
 #  utils.py
 """
-Private utilities
+Private utilities.
 """
 #
 #  Copyright © 2020-2021 Dominic Davis-Foster <dominic@davis-foster.co.uk>
@@ -47,6 +47,9 @@ else:  # pragma: no cover (<py310)
 
 
 class Visitor(ast.NodeVisitor):
+	"""
+	:class:`ast.NodeVisitor` to identify imports in a module.
+	"""
 
 	def __init__(self, pkg_name: str, namespace_packages: Optional[Dict[str, List[str]]] = None):
 		self.import_sources: List[Tuple[str, int]] = []
@@ -54,7 +57,14 @@ class Visitor(ast.NodeVisitor):
 		self.namespace_packages = namespace_packages or {}
 
 	def record_import(self, name: str, lineno: int):
-		# TODO: handle ``from namespace import package``
+		"""
+		Record an import.
+
+		:param name: The name of the module being imported.
+		:param lineno:
+
+		.. TODO:: handle ``from namespace import package``
+		"""
 
 		for namespace in self.namespace_packages:
 			if namespace in name:
@@ -67,12 +77,12 @@ class Visitor(ast.NodeVisitor):
 		if name not in libraries and name != self.pkg_name:
 			self.import_sources.append((name, lineno))
 
-	def visit_Import(self, node: ast.Import) -> None:
+	def visit_Import(self, node: ast.Import) -> None:  # noqa: D102
 		name: ast.alias
 		for name in node.names:
 			self.record_import(name.name, node.lineno)
 
-	def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+	def visit_ImportFrom(self, node: ast.ImportFrom) -> None:  # noqa: D102
 		if node.level != 0:
 			# relative import
 			return
@@ -81,10 +91,18 @@ class Visitor(ast.NodeVisitor):
 			self.record_import(node.module, node.lineno)
 
 	def visit(self, node: ast.AST) -> List[Tuple[str, int]]:
+		"""
+		Traverse the AST.
+
+		:param node:
+
+		:returns: A list of imports and their locations (as two-element ``(name, lineno)`` tuples).
+		"""
+
 		super().visit(node)
 		return self.import_sources
 
-	def visit_Try(self, node: ast.Try) -> Any:
+	def visit_Try(self, node: ast.Try) -> Any:  # noqa: D102
 		for handler in node.handlers:
 			if isinstance(handler.type, ast.Name):
 				# print(handler.type.id)
@@ -115,7 +133,7 @@ class Visitor(ast.NodeVisitor):
 	# 			# raise NotImplementedError(type(handler.type))
 	# 			pass
 
-	def visit_If(self, node: ast.If) -> Any:
+	def visit_If(self, node: ast.If) -> Any:  # noqa: D102
 		# TODO: check guarded imports
 
 		if not is_type_checking(node.test):
