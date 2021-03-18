@@ -86,7 +86,7 @@ def _nt_asdict_class_deco(nt: _nt_types):
 
 	_asdict.__module__ = nt.__module__
 	_asdict.__qualname__ = f"{nt.__name__}._asdict"
-	nt._asdict = _asdict
+	nt._asdict = _asdict  # type: ignore
 
 	return nt
 
