@@ -103,7 +103,7 @@ def make_requirement_tuple(data: Dict[str, Any]) -> _nt_types:
 	.. versionadded:: 0.6.0
 
 	:param data:
-	"""
+	"""  # noqa: D400
 
 	class_name = data.pop("class")
 
