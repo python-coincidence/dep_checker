@@ -31,7 +31,7 @@ import ast
 import re
 from collections import defaultdict
 from operator import attrgetter
-from typing import Dict, Iterable, Iterator, List, Mapping, NamedTuple, Optional, Set, Union
+from typing import Any, Dict, Iterable, Iterator, List, Mapping, NamedTuple, Optional, Set, Tuple, Type, Union
 
 # 3rd party
 import click
@@ -56,7 +56,8 @@ __all__ = [
 		"DepChecker",
 		"PassingRequirement",
 		"UnlistedRequirement",
-		"UnusedRequirement"
+		"UnusedRequirement",
+		"make_requirement_tuple",
 		]
 
 #: The template to use when printing output.
@@ -66,7 +67,61 @@ reader = ConfigReader("dep_checker", default_factory=dict)
 
 NODEP = re.compile(r".*#\s*nodep.*")
 
+_nt_types = Union[Type["PassingRequirement"], Type["UnlistedRequirement"], Type["UnusedRequirement"]]
 
+
+def _nt_asdict_class_deco(nt: _nt_types):
+	original_asdict = nt._asdict
+
+	def _asdict(self) -> Dict[str, Any]:
+		"""
+		Return dictionary which maps field names to their corresponding values.
+
+		.. seealso:: :func:`~.make_requirement_tuple`
+		"""
+
+		base_dict = dict(original_asdict(self))
+		base_dict["class"] = self.__class__.__name__
+		return base_dict
+
+	_asdict.__module__ = nt.__module__
+	_asdict.__qualname__ = f"{nt.__name__}._asdict"
+	nt._asdict = _asdict
+
+	return nt
+
+
+def make_requirement_tuple(data: Dict[str, Any]) -> _nt_types:
+	"""
+	Construct either a :class:`~.PassingRequirement`,
+	or :class:`~.UnlistedRequirement`, or :class:`~.UnusedRequirement`,
+	depending on the value of the ``class`` key.
+
+	Typically used to reconstruct an object from the dictionary produced by the
+	``_asdict()`` method of those classes.
+
+	.. versionadded:: 0.6.0
+
+	:param data:
+	"""
+
+	class_name = data.pop("class")
+
+	for class_obj in [
+			PassingRequirement,
+			UnlistedRequirement,
+			UnusedRequirement,
+			]:
+		if class_name == class_obj.__name__:
+			cls = class_obj
+			break
+	else:
+		raise ValueError(f"Unknown requirement class {class_name!r}")
+
+	return cls(**data)
+
+
+@_nt_asdict_class_deco
 class PassingRequirement(NamedTuple):
 	"""
 	Represents a requirement which is listed in the requirements file and imported.
@@ -86,6 +141,7 @@ class PassingRequirement(NamedTuple):
 		return f"✔ {template.format_map(self._asdict())}"
 
 
+@_nt_asdict_class_deco
 class UnlistedRequirement(NamedTuple):
 	"""
 	Represents a requirement which is imported but not listed in the requirements file.
@@ -105,6 +161,7 @@ class UnlistedRequirement(NamedTuple):
 		return f"✘ {template.format_map(self._asdict())} but not listed as a requirement"
 
 
+@_nt_asdict_class_deco
 class UnusedRequirement(NamedTuple):
 	"""
 	Represents a requirement which is listed in the requirements file but never imported.
@@ -272,11 +329,14 @@ def check_imports(
 	:no-default namespace_packages:
 	:param work_dir: The directory to find the source of the package in. Useful with the src/ layout.
 
+	:rtype:
+
 	| Returns ``0`` if all requirements are used and listed as requirements.
 	| Returns ``1`` is a requirement is unused, or if a package is imported but not listed as a requirement.
 
-	.. versionchanged:: 0.4.1 Added the ``name_mapping`` option.
+	|
 
+	.. versionchanged:: 0.4.1 Added the ``name_mapping`` option.
 	.. versionchanged:: 0.4.1 Added the ``work_dir`` option.
 	"""
 

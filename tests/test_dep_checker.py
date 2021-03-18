@@ -1,6 +1,5 @@
 # stdlib
-import ast
-from typing import List
+from typing import Any, Dict
 
 # 3rd party
 import pytest
@@ -10,67 +9,14 @@ from domdf_python_tools.paths import PathPlus, in_directory
 from pytest_regressions.file_regression import FileRegressionFixture
 
 # this package
-from dep_checker import check_imports
+from dep_checker import (
+		PassingRequirement,
+		UnlistedRequirement,
+		UnusedRequirement,
+		check_imports,
+		make_requirement_tuple
+		)
 from dep_checker.__main__ import main
-
-
-@pytest.fixture()
-def imports() -> List[str]:
-	return [
-			"import collections",
-			"import shutil",
-			"import pathlib",
-			"import os",
-			"import pytest",
-			"import chemistry_tools",
-			"import pathlib2",
-			"from typing_extensions import TypedDict",
-			"import domdf_python_tools",
-			"import consolekit",
-			"import click",
-			"import pandas",
-			"import ruamel.yaml",
-			"import sphinx  # nodep",
-			"import Bio",
-			"from . import foo",
-			"if False:",
-			"\timport requests",
-			'',
-			"try:",
-			"\timport virtualenv",
-			"except ImportError:",
-			"\timport venv",
-			'',
-			]
-
-
-@pytest.fixture()
-def single_file_project(tmp_pathplus: PathPlus, imports):
-	(tmp_pathplus / "my_project.py").write_lines(imports)
-	(tmp_pathplus / "requirements.txt").write_lines([
-			"consolekit",
-			"pandas",
-			"coincidence",
-			"numpy",
-			"biopython",
-			])
-
-	return tmp_pathplus
-
-
-@pytest.fixture()
-def package_project(tmp_pathplus: PathPlus, imports):
-	(tmp_pathplus / "my_project").mkdir()
-	(tmp_pathplus / "my_project" / "__init__.py").write_lines(imports)
-	(tmp_pathplus / "requirements.txt").write_lines([
-			"consolekit",
-			"pandas",
-			"coincidence",
-			"numpy",
-			"biopython",
-			])
-
-	return tmp_pathplus
 
 
 def test_check_imports(
@@ -115,9 +61,6 @@ def test_cli_package(package_project: PathPlus, file_regression: FileRegressionF
 	assert result.exit_code == 1
 
 
-# TODO: test with the different config options
-
-
 @pytest.mark.parametrize(
 		"config",
 		[
@@ -135,7 +78,10 @@ def test_cli_package(package_project: PathPlus, file_regression: FileRegressionF
 				]
 		)
 def test_with_config(
-		single_file_project: PathPlus, capsys, advanced_data_regression: AdvancedDataRegressionFixture, config
+		single_file_project: PathPlus,
+		capsys,
+		advanced_data_regression: AdvancedDataRegressionFixture,
+		config: Dict[str, Any],
 		):
 	assert check_imports(
 			"my_project",
@@ -144,3 +90,32 @@ def test_with_config(
 			**config,
 			) == 1
 	advanced_data_regression.check(capsys.readouterr())
+
+
+def test_make_requirement_tuple():
+	data = {"class": "UnlistedRequirement", "filename": "my_project.py", "lineno": 5, "name": "pytest"}
+	result = make_requirement_tuple(data)
+	assert isinstance(result, UnlistedRequirement)
+	assert result.filename == "my_project.py"
+	assert result.lineno == 5
+	assert result.name == "pytest"
+
+	data = {"class": "PassingRequirement", "filename": "my_project.py", "lineno": 5, "name": "pytest"}
+	result = make_requirement_tuple(data)
+	assert isinstance(result, PassingRequirement)
+	assert result.filename == "my_project.py"
+	assert result.lineno == 5
+	assert result.name == "pytest"
+
+	data = {"class": "UnusedRequirement", "name": "pytest"}
+	result = make_requirement_tuple(data)
+	assert isinstance(result, UnusedRequirement)
+	assert result.name == "pytest"
+
+	data = {"class": "UnknownClass", "name": "pytest"}
+	with pytest.raises(ValueError, match="Unknown requirement class 'UnknownClass'"):
+		make_requirement_tuple(data)
+
+	data = {"class": "UnusedRequirement", "name": "pytest", "filename": "my_project.py"}
+	with pytest.raises(TypeError, match=r"(__new__|<lambda>)\(\) got an unexpected keyword argument 'filename'"):
+		make_requirement_tuple(data)
