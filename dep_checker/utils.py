@@ -33,9 +33,9 @@ import sys
 from typing import Any, Dict, List, Optional, Tuple
 
 # 3rd party
-from astatine import is_type_checking
+from astatine import get_attribute_name, is_type_checking
 
-__all__ = ["Visitor"]
+__all__ = ["Visitor", "is_suppress_importerror"]
 
 if sys.version_info < (3, 10):  # pragma: no cover (py310+)
 	# 3rd party
@@ -112,6 +112,10 @@ class Visitor(ast.NodeVisitor):
 				if handler.type.id not in {"ImportError", "ModuleNotFoundError"}:
 					self.generic_visit(node)
 
+	def visit_With(self, node: ast.With) -> Any:  # noqa: D102
+		if not is_suppress_importerror(node):
+			self.generic_visit(node)
+
 	# def visit_Try(self, node: ast.Try) -> Any:
 	# 	for handler in node.handlers:
 	# 		if isinstance(handler.type, ast.Attribute):
@@ -138,3 +142,38 @@ class Visitor(ast.NodeVisitor):
 
 		if not is_type_checking(node.test):
 			self.generic_visit(node)
+
+
+def is_suppress_importerror(node: ast.With):
+	"""
+	Returns whether the given ``with`` block contains a
+	:func:`contextlib.suppress(ImportError) <contextlib.suppress>` contextmanager.
+
+	.. versionadded:: 0.5.0 (private)
+
+	:param node:
+	"""  # noqa: D400
+
+	item: ast.withitem
+	for item in node.items:
+		if not isinstance(item.context_expr, ast.Call):
+			continue
+
+		try:
+			name = '.'.join(get_attribute_name(item.context_expr.func))
+		except NotImplementedError:  # pragma: no cover
+			continue
+
+		if name not in {"suppress", "contextlib.suppress", "contextlib2.suppress"}:
+			continue
+
+		for arg in item.context_expr.args:
+			try:
+				arg_name = '.'.join(get_attribute_name(arg))
+			except NotImplementedError:  # pragma: no cover
+				continue
+
+			if arg_name in {"ImportError", "ModuleNotFoundError"}:
+				return True
+
+	return False

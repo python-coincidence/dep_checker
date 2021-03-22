@@ -35,6 +35,18 @@ def imports() -> List[str]:
 			"except ImportError:",
 			"\timport venv",
 			'',
+			"with contextlib.suppress(ImportError):",
+			"\timport whey",
+			"with suppress(ModuleNotFoundError):",
+			"\timport dom_toml",
+			"with open('foo.txt'): pass",
+			"try:",
+			"\timport configconfig",
+			"except TypeError:",
+			"\tpass",
+			"if sys.version_info > (3, 6):",
+			"\timport setuptools",
+			'',
 			]
 
 

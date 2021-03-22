@@ -26,6 +26,14 @@
   filename: my_project.py
   lineno: 13
   name: ruamel
+- class: UnlistedRequirement
+  filename: my_project.py
+  lineno: 31
+  name: configconfig
+- class: UnlistedRequirement
+  filename: my_project.py
+  lineno: 35
+  name: setuptools
 - class: PassingRequirement
   filename: my_project.py
   lineno: 15

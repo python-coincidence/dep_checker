@@ -191,3 +191,14 @@ def test_configreader_default(tmp_pathplus: PathPlus):
 	(tmp_pathplus / "pyproject.toml").touch()
 
 	assert reader.visit() == {}
+
+
+def test_defaults():
+	assert AllowedUnused.get(None) == []
+	assert AllowedUnused.get() == []
+
+	assert NamespacePackages.get(None) == []
+	assert NamespacePackages.get() == []
+
+	assert NameMapping.get(None) == {}
+	assert NameMapping.get() == {}

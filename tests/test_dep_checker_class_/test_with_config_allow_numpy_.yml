@@ -30,6 +30,14 @@
   filename: my_project.py
   lineno: 15
   name: Bio
+- class: UnlistedRequirement
+  filename: my_project.py
+  lineno: 31
+  name: configconfig
+- class: UnlistedRequirement
+  filename: my_project.py
+  lineno: 35
+  name: setuptools
 - class: UnusedRequirement
   name: biopython
 - class: UnusedRequirement
