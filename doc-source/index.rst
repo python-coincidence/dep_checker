@@ -4,7 +4,7 @@ dep_checker
 
 .. start short_desc
 
-**Tool to check all requirements are actually required.**
+.. documentation-summary::
 
 .. end short_desc
 
