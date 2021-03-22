@@ -33,7 +33,7 @@ from configparser import ConfigParser
 from typing import Any, Callable, Dict, List, Optional
 
 # 3rd party
-import toml
+import dom_toml
 from configconfig.configvar import ConfigVar
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
@@ -229,7 +229,7 @@ class ConfigReader:
 		"""
 
 		if (self.work_dir / "pyproject.toml").is_file():
-			config = toml.loads((self.work_dir / "pyproject.toml").read_text())
+			config = dom_toml.load(self.work_dir / "pyproject.toml")
 
 			if "tool" in config and self.section_name in config["tool"]:
 				return config["tool"][self.section_name]
