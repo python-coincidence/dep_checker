@@ -30,4 +30,4 @@ from dep_checker.utils import is_suppress_importerror
 		)
 def test_is_suppress_importerror(source: str, expected: bool):
 	node = ast.parse(source).body[0]
-	assert is_suppress_importerror(node) is expected
+	assert is_suppress_importerror(node) is expected  # type: ignore
