@@ -39,5 +39,5 @@ keywords:
  - linter
  - pre-commit
 
-min_coverage: 94
+min_coverage: 98
 sphinx_html_theme: furo
