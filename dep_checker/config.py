@@ -65,7 +65,7 @@ class AllowedUnused(ConfigVar):
 		if raw_config_vars is None:
 			raw_config_vars = {}
 
-		if cls.rtype is None:
+		if cls.rtype is None:  # pragma: no cover
 			cls.rtype = cls.dtype
 
 		if cls.__name__ in raw_config_vars:
@@ -102,7 +102,6 @@ class NamespacePackages(ConfigVar):
 	"""
 
 	dtype = List[str]
-	rtype = List[str]
 	default: List[str] = []
 	__name__ = "namespace_packages"
 
@@ -111,7 +110,7 @@ class NamespacePackages(ConfigVar):
 		if raw_config_vars is None:
 			raw_config_vars = {}
 
-		if cls.rtype is None:
+		if cls.rtype is None:  # pragma: no cover
 			cls.rtype = cls.dtype
 
 		if cls.__name__ in raw_config_vars:
@@ -144,8 +143,8 @@ class NameMapping(ConfigVar):
 			biopython = Bio
 	"""
 
-	dtype = List[str]
-	default: List[str] = []
+	dtype = Dict[str, str]
+	default: Dict[str, str] = {}
 	__name__ = "name_mapping"
 
 	@classmethod
@@ -153,7 +152,7 @@ class NameMapping(ConfigVar):
 		if raw_config_vars is None:
 			raw_config_vars = {}
 
-		if cls.rtype is None:
+		if cls.rtype is None:  # pragma: no cover
 			cls.rtype = cls.dtype
 
 		if cls.__name__ in raw_config_vars:
@@ -173,7 +172,7 @@ class NameMapping(ConfigVar):
 
 			return {str(k).replace('-', '_'): str(v) for k, v in value.items()}
 
-		return cls.default[:]
+		return cls.default.copy()
 
 
 class ConfigReader:
