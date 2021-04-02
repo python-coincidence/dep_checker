@@ -198,7 +198,7 @@ class ConfigReader:
 
 		if (self.work_dir / "tox.ini").is_file():
 			tox_ini = ConfigParser()
-			tox_ini.read(self.work_dir / "tox.ini")
+			tox_ini.read(self.work_dir / "tox.ini", encoding="UTF-8")
 
 			if self.section_name in tox_ini:
 				return dict(tox_ini[self.section_name])
@@ -214,7 +214,7 @@ class ConfigReader:
 
 		if (self.work_dir / "setup.cfg").is_file():
 			tox_ini = ConfigParser()
-			tox_ini.read(self.work_dir / "setup.cfg")
+			tox_ini.read(self.work_dir / "setup.cfg", encoding="UTF-8")
 
 			if self.section_name in tox_ini:
 				return dict(tox_ini[self.section_name])
