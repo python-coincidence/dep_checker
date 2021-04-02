@@ -29,6 +29,7 @@ Tool to check all requirements are actually required.
 # stdlib
 import ast
 import re
+import sys
 from collections import defaultdict
 from operator import attrgetter
 from typing import Any, Dict, Iterable, Iterator, List, Mapping, NamedTuple, Optional, Set, Tuple, Type, Union
@@ -367,14 +368,18 @@ def check_imports(
 			namespace_packages=namespace_packages,
 			)
 
+	def echo(text: str):
+		text = text.encode(sys.stdout.encoding, errors="ignore").decode(sys.stdout.encoding)
+		return click.echo(text, color=colour)
+
 	for item in checker.check(work_dir):
 		if isinstance(item, PassingRequirement):
-			click.echo(Fore.GREEN(item.format_error()), color=colour)
+			echo(Fore.GREEN(item.format_error()))
 		elif isinstance(item, UnusedRequirement):
-			click.echo(Fore.YELLOW(item.format_error()), color=colour)
+			echo(Fore.YELLOW(item.format_error()))
 			ret |= 1
 		elif isinstance(item, UnlistedRequirement):
-			click.echo(Fore.RED(item.format_error()), color=colour)
+			echo(Fore.RED(item.format_error()))
 			ret |= 1
 
 	return ret
