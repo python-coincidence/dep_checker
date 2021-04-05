@@ -24,7 +24,7 @@ dep_checker
 	* - Activity
 	  - |commits-latest| |commits-since| |maintained| |pypi-downloads|
 	* - QA
-	  - |codefactor| |actions_flake8| |actions_mypy| |pre_commit_ci|
+	  - |codefactor| |actions_flake8| |actions_mypy|
 	* - Other
 	  - |license| |language| |requires|
 
@@ -105,10 +105,6 @@ dep_checker
 .. |pypi-downloads| image:: https://img.shields.io/pypi/dm/dep_checker
 	:target: https://pypi.org/project/dep_checker/
 	:alt: PyPI - Downloads
-
-.. |pre_commit_ci| image:: https://results.pre-commit.ci/badge/github/domdfcoding/dep_checker/master.svg
-	:target: https://results.pre-commit.ci/latest/github/domdfcoding/dep_checker/master
-	:alt: pre-commit.ci status
 
 .. end shields
 
