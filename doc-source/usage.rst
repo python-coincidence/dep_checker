@@ -114,13 +114,13 @@ To do so, add the following to your
 `.pre-commit-config.yaml <https://pre-commit.com/#2-add-a-pre-commit-configuration>`_ file:
 
 .. pre-commit::
-	:rev: 0.6.0
+	:rev: 0.6.1
 	:hooks: dep_checker
 	:args: <PKG_NAME>
 
 ``<PKG_NAME>`` should be replaced with the name of the package to check, e.g. ``consolekit``:
 
 .. pre-commit::
-	:rev: 0.6.0
+	:rev: 0.6.1
 	:hooks: dep_checker
 	:args: consolekit
