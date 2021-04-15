@@ -208,7 +208,7 @@ class DepChecker:
 			namespace_packages: Optional[Iterable[str]] = None,
 			):
 
-		self.pkg_name: str = str(pkg_name)
+		self.pkg_name: str = str(pkg_name).rstrip(r"\/")
 		self.requirements: Set[str] = set()
 		self.allowed_unused: List[str] = list(allowed_unused or ())
 
@@ -295,7 +295,7 @@ def iter_files_to_check(basepath: PathLike, pkg_name: str) -> Iterator[PathPlus]
 		return
 
 	if not (basepath / pkg_name).exists():
-		raise FileNotFoundError(f"Can't find a package called {pkg_name!r} in {basepath.as_posix()}.")
+		raise FileNotFoundError(f"Can't find a package called {pkg_name!r} in {basepath.as_posix()!r}")
 
 	for filename in (basepath / pkg_name.replace('.', '/')).rglob("*.py"):
 		filename = filename.relative_to(basepath)

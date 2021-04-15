@@ -25,7 +25,7 @@
 - class: UnlistedRequirement
   filename: my_project.py
   lineno: 13
-  name: ruamel_yaml
+  name: ruamel.yaml
 - class: UnlistedRequirement
   filename: my_project.py
   lineno: 15

@@ -53,7 +53,7 @@ class Visitor(ast.NodeVisitor):
 
 	def __init__(self, pkg_name: str, namespace_packages: Optional[Dict[str, List[str]]] = None):
 		self.import_sources: List[Tuple[str, int]] = []
-		self.pkg_name = re.sub("[-.]", '_', pkg_name)
+		self.pkg_name = re.sub(r"[-/\\]", '_', pkg_name.rstrip(r"\/"))
 		self.namespace_packages = namespace_packages or {}
 
 	def record_import(self, name: str, lineno: int):
@@ -66,10 +66,12 @@ class Visitor(ast.NodeVisitor):
 		.. TODO:: handle ``from namespace import package``
 		"""
 
-		for namespace in self.namespace_packages:
-			if namespace in name:
-				name = name.replace('.', '_')
-				break
+		for namespace, children in self.namespace_packages.items():
+			name_elements = name.split('.')
+			if name_elements[0] == namespace:
+				if len(name_elements) > 1 and name_elements[1] in children:
+					name = '.'.join(name_elements[:2])
+					break
 		else:
 			# Not a namespace package
 			name = name.split('.')[0]
