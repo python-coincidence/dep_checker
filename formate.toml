@@ -33,7 +33,6 @@ remove_redundant_aliases = true
 default_section = "THIRDPARTY"
 known_third_party = [
     "astatine",
-    "backports_entry_points_selectable",
     "click",
     "coincidence",
     "configconfig",
@@ -42,17 +41,13 @@ known_third_party = [
     "coverage_pyver_pragma",
     "dom_toml",
     "domdf_python_tools",
-    "github",
     "importlib_metadata",
     "pytest",
     "pytest_cov",
     "pytest_randomly",
     "pytest_timeout",
-    "repo_helper",
-    "requests",
     "shippinglabel",
     "stdlib_list",
-    "toml",
 ]
 known_first_party = "dep_checker"
 line_length = 115
