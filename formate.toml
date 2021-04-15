@@ -43,6 +43,7 @@ known_third_party = [
     "dom_toml",
     "domdf_python_tools",
     "github",
+    "importlib_metadata",
     "pytest",
     "pytest_cov",
     "pytest_randomly",
