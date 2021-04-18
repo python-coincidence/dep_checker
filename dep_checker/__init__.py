@@ -36,10 +36,11 @@ from typing import Any, Dict, Iterable, Iterator, List, Mapping, NamedTuple, Opt
 
 # 3rd party
 import click
+import dom_toml
 from consolekit.terminal_colours import Fore, resolve_color_default
 from domdf_python_tools.paths import PathPlus, in_directory
 from domdf_python_tools.typing import PathLike
-from shippinglabel.requirements import read_requirements
+from shippinglabel.requirements import ComparableRequirement, read_requirements
 
 # this package
 from dep_checker.config import AllowedUnused, ConfigReader, NameMapping, NamespacePackages
@@ -66,7 +67,8 @@ template = "{name} imported at {filename}:{lineno}"
 
 reader = ConfigReader("dep_checker", default_factory=dict)
 
-NODEP = re.compile(r".*#\s*nodep.*")
+NODEP = re.compile(r".*#\s*nodep.*", flags=re.IGNORECASE)
+EXTRADEP = re.compile(r".*#\s*extra(?:[-_ ])?dep\s*:\s*([a-z-_][a-z0-9-_]+).*", flags=re.IGNORECASE)
 
 _nt_types = Union[Type["PassingRequirement"], Type["UnlistedRequirement"], Type["UnusedRequirement"]]
 
@@ -203,6 +205,8 @@ class DepChecker:
 	:no-default name_mapping:
 	:param namespace_packages: List of namespace packages, e.g. ``ruamel.yaml``.
 	:no-default namespace_packages:
+	:param optional_requirements: A mapping of extra names to sets of optional requirements.
+	:no-default optional_requirements:
 	"""
 
 	def __init__(
@@ -213,11 +217,13 @@ class DepChecker:
 			allowed_unused: Optional[Iterable[str]] = None,
 			name_mapping: Optional[Mapping[str, str]] = None,
 			namespace_packages: Optional[Iterable[str]] = None,
+			optional_requirements: Optional[Dict[str, Set[ComparableRequirement]]] = None
 			):
 
 		self.pkg_name: str = str(pkg_name).rstrip(r"\/")
 		self.requirements: Set[str] = set()
 		self.allowed_unused: List[str] = list(allowed_unused or ())
+		self.optional_requirements: Dict[str, Set[ComparableRequirement]] = dict(optional_requirements or {})
 
 		name_mapping = dict(name_mapping or {})
 
@@ -266,6 +272,25 @@ class DepChecker:
 
 					if NODEP.match(file_content.splitlines()[lineno - 1]):
 						# Marked with "# nodep", so the user wants to ignore this
+						continue
+
+					extra_dep_match = EXTRADEP.match(file_content.splitlines()[lineno - 1])
+
+					if extra_dep_match:
+						# Marked with "# extra-dep: <name>", so this is an optional requirement
+						extra_name = extra_dep_match.group(1)
+						if extra_name in self.optional_requirements:
+							if import_name in self.requirements:
+								min_lineno = min((imports[import_name].get(filename, lineno), lineno))
+								# TODO: flag in the stdout as an input
+								imports[import_name][filename] = min_lineno
+								continue
+						else:
+							yield UnknownExtra(name=import_name, lineno=lineno, filename=filename.as_posix())
+
+						print(extra_name)
+						print(self.optional_requirements[extra_name])
+						input(">>>")
 						continue
 
 					yield UnlistedRequirement(name=import_name, lineno=lineno, filename=filename.as_posix())
