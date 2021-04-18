@@ -418,3 +418,26 @@ def check_imports(
 			ret |= 1
 
 	return ret
+
+
+# 3rd party
+from shippinglabel.requirements import parse_pyproject_dependencies, parse_pyproject_extras
+
+
+def get_requirements_from_pyproject(project_dir: PathLike) -> Dict[str, Set[ComparableRequirement]]:
+	project_dir = PathPlus(project_dir)
+	pyproject_file = project_dir / "pyproject.toml"
+
+	dynamic = dom_toml.load(pyproject_file)["project"].get("dynamic", ())
+
+	data = {}
+
+	if "requirements" in dynamic:
+		data["$main"] = read_requirements(project_dir / "requirements.txt", include_invalid=True)[0]
+	else:
+		data["$main"] = parse_pyproject_dependencies(pyproject_file, flavour="pep621")
+
+	for extra_name, extra_requirements in parse_pyproject_extras(pyproject_file).items():
+		data[extra_name] = extra_requirements
+
+	return data
