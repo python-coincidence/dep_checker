@@ -32,11 +32,15 @@ from typing import List, Optional
 
 # 3rd party
 import click
+import dom_toml
 from consolekit import click_command
-from consolekit.options import colour_option
+from consolekit.options import auto_default_option, colour_option, flag_option
 from consolekit.utils import abort
 
 # this package
+from domdf_python_tools.paths import PathPlus
+from shippinglabel.requirements import parse_pyproject_dependencies, read_requirements
+
 from dep_checker import check_imports
 
 __all__ = ("main", )
@@ -57,12 +61,16 @@ __all__ = ("main", )
 		multiple=True,
 		help="Requirements which are allowed to be unused in the source code.",
 		)
-@click.option(
+@auto_default_option(
 		"--req-file",
 		type=click.STRING,
 		metavar="FILENAME",
-		default="requirements.txt",
-		help="The requirements file.",
+		help="Parse the requirements from the given requirements file.",
+		)
+@flag_option(
+		"-P", "--pyproject",
+		type=click.STRING,
+		help="Parse the requirements from 'pyproject.toml'.",
 		)
 @click.argument(
 		"pkg-name",
@@ -71,10 +79,11 @@ __all__ = ("main", )
 @click_command()
 def main(
 		pkg_name: str,
-		req_file: str,
 		allowed_unused: Optional[List[str]],
-		colour: Optional[bool],
+		colour: Optional[bool] = None,
+		req_file: str = "requirements.txt",
 		work_dir: str = '.',
+		pyproject: bool = False
 		) -> None:
 	"""
 	Tool to check all requirements are actually required.
@@ -83,10 +92,32 @@ def main(
 	if allowed_unused == ():
 		allowed_unused = None
 
+	work_dir = PathPlus(work_dir)
+
+	def read_req_file(req_file):
+		req_file = PathPlus(req_file)
+
+		if not req_file.is_absolute():
+			req_file = work_dir / req_file
+
+		return read_requirements(req_file)[0]
+
+	if pyproject:
+		pyproject_file = work_dir / "pyproject.toml"
+		dynamic = dom_toml.load(pyproject_file)["project"].get("dynamic", ())
+
+		if "requirements" in dynamic:
+			requirements = read_req_file(work_dir / "requirements.txt")
+		else:
+			requirements = parse_pyproject_dependencies(pyproject_file, flavour="pep621")
+
+	else:
+		requirements = read_req_file(req_file)
+
 	try:
 		ret = check_imports(
 				pkg_name,
-				req_file=req_file,
+				*requirements,
 				allowed_unused=allowed_unused,
 				colour=colour,
 				work_dir=work_dir,
