@@ -130,11 +130,11 @@ class PassingRequirement(NamedTuple):
 	.. versionadded:: 0.6.0
 	"""
 
-	# The name of the requirement.
+	#: The name of the requirement.
 	name: str
-	# The line number where the requirement is imported.
+	#: The line number where the requirement is imported.
 	lineno: int
-	# The file where the requirement is imported.
+	#: The file where the requirement is imported.
 	filename: str
 
 	def format_error(self) -> str:
@@ -153,11 +153,11 @@ class UnlistedRequirement(NamedTuple):
 	.. versionadded:: 0.6.0
 	"""
 
-	# The name of the requirement.
+	#: The name of the requirement.
 	name: str
-	# The line number where the requirement is imported.
+	#: The line number where the requirement is imported.
 	lineno: int
-	# The file where the requirement is imported.
+	#: The file where the requirement is imported.
 	filename: str
 
 	def format_error(self) -> str:
@@ -176,7 +176,7 @@ class UnusedRequirement(NamedTuple):
 	.. versionadded:: 0.6.0
 	"""
 
-	# The name of the requirement.
+	#: The name of the requirement.
 	name: str
 
 	def format_error(self) -> str:

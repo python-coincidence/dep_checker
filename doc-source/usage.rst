@@ -8,6 +8,10 @@ Configuration
 | ``dep-checker`` can be configured via the ``[tool.dep_checker]`` table of ``pyproject.toml``.
 | The configuration can also be placed in the ``[dep_checker]`` section of ``tox.ini`` or ``setup.cfg``.
 
+.. raw:: html
+
+	<p/>
+
 .. versionchanged:: 0.5.0  Added support for ``pyproject.toml``
 
 .. latex:vspace:: 10px
@@ -97,7 +101,7 @@ For example:
 .. versionadded:: 0.4.1
 
 
-dep-checker
+Command Line
 -----------------
 
 .. click:: dep_checker.__main__:main

@@ -24,4 +24,5 @@ Public API
 	:exclude-members: __repr__
 
 .. autofunction:: dep_checker.check_imports
+.. autofunction:: dep_checker.make_requirement_tuple
 .. autovariable:: dep_checker.template
