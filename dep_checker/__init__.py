@@ -130,8 +130,11 @@ class PassingRequirement(NamedTuple):
 	.. versionadded:: 0.6.0
 	"""
 
+	# The name of the requirement.
 	name: str
+	# The line number where the requirement is imported.
 	lineno: int
+	# The file where the requirement is imported.
 	filename: str
 
 	def format_error(self) -> str:
@@ -150,8 +153,11 @@ class UnlistedRequirement(NamedTuple):
 	.. versionadded:: 0.6.0
 	"""
 
+	# The name of the requirement.
 	name: str
+	# The line number where the requirement is imported.
 	lineno: int
+	# The file where the requirement is imported.
 	filename: str
 
 	def format_error(self) -> str:
@@ -170,6 +176,7 @@ class UnusedRequirement(NamedTuple):
 	.. versionadded:: 0.6.0
 	"""
 
+	# The name of the requirement.
 	name: str
 
 	def format_error(self) -> str:
@@ -332,13 +339,13 @@ def check_imports(
 
 	:rtype:
 
-	| Returns ``0`` if all requirements are used and listed as requirements.
-	| Returns ``1`` is a requirement is unused, or if a package is imported but not listed as a requirement.
+	* Returns ``0`` if all requirements are used and listed as requirements.
+	* Returns ``1`` is a requirement is unused, or if a package is imported but not listed as a requirement.
 
-	|
+	.. versionchanged:: 0.4.1
 
-	.. versionchanged:: 0.4.1 Added the ``name_mapping`` option.
-	.. versionchanged:: 0.4.1 Added the ``work_dir`` option.
+		* Added the ``name_mapping`` option.
+		* Added the ``work_dir`` option.
 	"""
 
 	ret = 0

@@ -126,6 +126,8 @@ Installation
 Contents
 -------------
 
+.. html-section::
+
 .. toctree::
 	:hidden:
 
@@ -133,17 +135,18 @@ Contents
 
 .. toctree::
 	:maxdepth: 3
-	:caption: Documentation
 
 	usage
 	api
-
-.. toctree::
-	:maxdepth: 3
-	:caption: Contributing
-
-	contributing
 	Source
+
+
+.. sidebar-links::
+	:caption: Links
+	:github:
+	:pypi: dep_checker
+
+	Contributing Guide <https://contributing-to-coincidence.readthedocs.io/en/latest/>
 
 .. start links
 
@@ -151,6 +154,6 @@ Contents
 
 	View the :ref:`Function Index <genindex>` or browse the `Source Code <_modules/index.html>`__.
 
-	`Browse the GitHub Repository <https://github.com/domdfcoding/dep_checker>`__
+	:github:repo:`Browse the GitHub Repository <domdfcoding/dep_checker>`
 
 .. end links

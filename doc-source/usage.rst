@@ -8,13 +8,9 @@ Configuration
 | ``dep-checker`` can be configured via the ``[tool.dep_checker]`` table of ``pyproject.toml``.
 | The configuration can also be placed in the ``[dep_checker]`` section of ``tox.ini`` or ``setup.cfg``.
 
-|
+.. versionchanged:: 0.5.0  Added support for ``pyproject.toml``
 
-.. versionchanged:: 0.5.0
-
-	Added support for ``pyproject.toml``
-
-
+.. latex:vspace:: 10px
 .. confval:: allowed_unused
 
 	List of requirements which are allowed to be unused in the source code.
@@ -35,6 +31,7 @@ Configuration
 		allowed_unused = pytest, sphinx
 
 
+.. latex:vspace:: 10px
 .. confval:: name_mapping
 
 	Mapping of requirement names (e.g. "biopython") to the names of packages they provide (e.g. "Bio").
@@ -58,12 +55,13 @@ Configuration
 			biopython = Bio
 
 
+.. latex:vspace:: 10px
 .. confval:: namespace_packages
 
-	List of namespace packages, e.g. ``ruamel.yaml``.
-	This currently only handles imports in the form
-	``import namespace.package`` or
-	``from namespace.package import object``,
+	List of namespace packages, such as ``ruamel.yaml``.
+
+	This currently only handles imports in the form ``import namespace.package``
+	or ``from namespace.package import object``,
 	but not ``from namespace import package``.
 
 	.. versionadded:: 0.4.1
@@ -89,7 +87,7 @@ Ignoring imports that aren't listed as requirements
 
 To ignore lines where packages are imported, but aren't listed in ``requirements.txt``, use ``# nodep``.
 
-E.g.:
+For example:
 
 .. code-block:: python
 
