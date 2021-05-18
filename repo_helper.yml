@@ -11,6 +11,7 @@ short_desc: 'Tool to check all requirements are actually required.'
 
 enable_conda: false
 use_whey: true
+preserve_custom_theme: true
 
 python_versions:
  - 3.6
