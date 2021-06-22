@@ -2,7 +2,8 @@
 Public API
 ============
 
-.. autosummary-widths:: 15/32 17/32
+.. autosummary-widths:: 15/32
+	:html: 1/2
 
 .. automodule:: dep_checker
 	:no-members:
