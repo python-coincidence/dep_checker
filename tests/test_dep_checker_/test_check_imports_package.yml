@@ -1,21 +1,17 @@
 err: []
 out:
-- ✘ pytest imported on line 5 of my_project/__init__.py but not listed as a requirement
-- ✘ chemistry_tools imported on line 6 of my_project/__init__.py but not listed as
-  a requirement
-- ✘ pathlib2 imported on line 7 of my_project/__init__.py but not listed as a requirement
-- ✘ typing_extensions imported on line 8 of my_project/__init__.py but not listed
-  as a requirement
-- ✘ domdf_python_tools imported on line 9 of my_project/__init__.py but not listed
-  as a requirement
-- ✘ click imported on line 11 of my_project/__init__.py but not listed as a requirement
-- ✘ ruamel imported on line 13 of my_project/__init__.py but not listed as a requirement
-- ✘ Bio imported on line 15 of my_project/__init__.py but not listed as a requirement
-- ✘ configconfig imported on line 31 of my_project/__init__.py but not listed as a
-  requirement
-- ✘ setuptools imported on line 35 of my_project/__init__.py but not listed as a requirement
+- 'my_project/__init__.py:5: ✘ pytest imported but not listed as a requirement'
+- 'my_project/__init__.py:6: ✘ chemistry_tools imported but not listed as a requirement'
+- 'my_project/__init__.py:7: ✘ pathlib2 imported but not listed as a requirement'
+- 'my_project/__init__.py:8: ✘ typing_extensions imported but not listed as a requirement'
+- 'my_project/__init__.py:9: ✘ domdf_python_tools imported but not listed as a requirement'
+- 'my_project/__init__.py:11: ✘ click imported but not listed as a requirement'
+- 'my_project/__init__.py:13: ✘ ruamel imported but not listed as a requirement'
+- 'my_project/__init__.py:15: ✘ Bio imported but not listed as a requirement'
+- 'my_project/__init__.py:31: ✘ configconfig imported but not listed as a requirement'
+- 'my_project/__init__.py:35: ✘ setuptools imported but not listed as a requirement'
 - ✘ biopython never imported
 - ✘ coincidence never imported
-- ✔ consolekit imported on line 10 of my_project/__init__.py
+- 'my_project/__init__.py:10: ✔ consolekit imported'
 - ✘ numpy never imported
-- ✔ pandas imported on line 12 of my_project/__init__.py
+- 'my_project/__init__.py:12: ✔ pandas imported'
