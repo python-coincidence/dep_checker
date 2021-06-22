@@ -62,7 +62,6 @@ extensions = [
     "sphinx_toolbox.tweaks.latex_toc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
-    "sphinxcontrib.httpdomain",
     "sphinxcontrib.extras_require",
     "sphinx.ext.todo",
     "sphinxemoji.sphinxemoji",
@@ -74,8 +73,8 @@ extensions = [
     "seed_intersphinx_mapping",
     "sphinx_click",
     "sphinx_toolbox.pre_commit",
-    "html_section",
-    "autosummary_widths",
+    "sphinx_toolbox_experimental.html_section",
+    "sphinx_toolbox_experimental.autosummary_widths",
 ]
 sphinxemoji_style = "twemoji"
 gitstamp_fmt = "%d %b %Y"
@@ -97,7 +96,6 @@ toctree_plus_types = [
     "exception",
     "flag",
     "function",
-    "method",
     "namedtuple",
     "protocol",
     "role",
