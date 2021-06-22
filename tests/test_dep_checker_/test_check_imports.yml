@@ -1,17 +1,17 @@
 err: []
 out:
-- ✘ pytest imported at my_project.py:5 but not listed as a requirement
-- ✘ chemistry_tools imported at my_project.py:6 but not listed as a requirement
-- ✘ pathlib2 imported at my_project.py:7 but not listed as a requirement
-- ✘ typing_extensions imported at my_project.py:8 but not listed as a requirement
-- ✘ domdf_python_tools imported at my_project.py:9 but not listed as a requirement
-- ✘ click imported at my_project.py:11 but not listed as a requirement
-- ✘ ruamel imported at my_project.py:13 but not listed as a requirement
-- ✘ Bio imported at my_project.py:15 but not listed as a requirement
-- ✘ configconfig imported at my_project.py:31 but not listed as a requirement
-- ✘ setuptools imported at my_project.py:35 but not listed as a requirement
+- 'my_project.py:5: ✘ pytest imported but not listed as a requirement'
+- 'my_project.py:6: ✘ chemistry_tools imported but not listed as a requirement'
+- 'my_project.py:7: ✘ pathlib2 imported but not listed as a requirement'
+- 'my_project.py:8: ✘ typing_extensions imported but not listed as a requirement'
+- 'my_project.py:9: ✘ domdf_python_tools imported but not listed as a requirement'
+- 'my_project.py:11: ✘ click imported but not listed as a requirement'
+- 'my_project.py:13: ✘ ruamel imported but not listed as a requirement'
+- 'my_project.py:15: ✘ Bio imported but not listed as a requirement'
+- 'my_project.py:31: ✘ configconfig imported but not listed as a requirement'
+- 'my_project.py:35: ✘ setuptools imported but not listed as a requirement'
 - ✘ biopython never imported
 - ✘ coincidence never imported
-- ✔ consolekit imported at my_project.py:10
+- 'my_project.py:10: ✔ consolekit imported'
 - ✘ numpy never imported
-- ✔ pandas imported at my_project.py:12
+- 'my_project.py:12: ✔ pandas imported'
