@@ -141,6 +141,7 @@ Contents
 	usage
 	api
 	Source
+	license
 
 
 .. sidebar-links::

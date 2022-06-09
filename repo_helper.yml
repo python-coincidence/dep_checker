@@ -11,7 +11,10 @@ short_desc: 'Tool to check all requirements are actually required.'
 
 enable_conda: false
 use_whey: true
+min_coverage: 98
 preserve_custom_theme: true
+sphinx_html_theme: furo
+docs_fail_on_warning: true
 
 python_versions:
  - 3.6
@@ -29,8 +32,10 @@ console_scripts:
 extra_sphinx_extensions:
  - sphinx_click
  - sphinx_toolbox.pre_commit
- - sphinx_toolbox_experimental.html_section
- - sphinx_toolbox_experimental.autosummary_widths
+ - sphinx_toolbox.more_autosummary.column_widths
+
+sphinx_conf_epilogue:
+ - nitpicky = True
 
 classifiers:
  - 'Development Status :: 4 - Beta'
@@ -41,9 +46,6 @@ keywords:
  - dependencies
  - linter
  - pre-commit
-
-min_coverage: 98
-sphinx_html_theme: furo
 
 exclude_files:
  - contributing
