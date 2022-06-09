@@ -367,6 +367,9 @@ def check_imports(
 	if not req_file.is_absolute():
 		req_file = work_dir / req_file
 
+	req_file = req_file.abspath()
+	work_dir = work_dir.abspath()
+
 	checker = DepChecker(
 			pkg_name,
 			requirements=map(attrgetter("name"), read_requirements(req_file)[0]),

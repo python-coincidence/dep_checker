@@ -1,4 +1,5 @@
 # stdlib
+import shutil
 from typing import Any, Dict
 
 # 3rd party
@@ -56,6 +57,20 @@ def test_cli_package(package_project: PathPlus, file_regression: FileRegressionF
 	with in_directory(package_project):
 		runner = CliRunner()
 		result: Result = runner.invoke(main, args=["my_project", "--no-colour"])
+
+	result.check_stdout(file_regression)
+	assert result.exit_code == 1
+
+
+def test_cli_package_srcdir(package_project: PathPlus, file_regression: FileRegressionFixture):
+	shutil.move(package_project / "my_project", package_project / "src" / "my_project")
+
+	with in_directory(package_project):
+		runner = CliRunner()
+		result: Result = runner.invoke(
+				main,
+				args=["my_project", "--no-colour", "--work-dir", "src", "--req-file", "../requirements.txt"],
+				)
 
 	result.check_stdout(file_regression)
 	assert result.exit_code == 1
