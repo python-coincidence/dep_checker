@@ -40,10 +40,6 @@ python-implementations = [ "CPython", "PyPy",]
 platforms = [ "Windows", "macOS", "Linux",]
 license-key = "MIT"
 
-[tool.mkrecipe]
-conda-channels = [ "domdfcoding",]
-extras = "all"
-
 [tool.sphinx-pyproject]
 github_username = "domdfcoding"
 github_repository = "dep_checker"
@@ -58,6 +54,7 @@ extensions = [
     "sphinx_toolbox.more_autosummary",
     "sphinx_toolbox.documentation_summary",
     "sphinx_toolbox.tweaks.param_dash",
+    "sphinxcontrib.toctree_plus",
     "sphinx_toolbox.tweaks.latex_layout",
     "sphinx_toolbox.tweaks.latex_toc",
     "sphinx.ext.intersphinx",
@@ -68,9 +65,10 @@ extensions = [
     "notfound.extension",
     "sphinx_copybutton",
     "sphinxcontrib.default_values",
-    "sphinxcontrib.toctree_plus",
     "sphinx_debuginfo",
+    "sphinx_licenseinfo",
     "seed_intersphinx_mapping",
+    "html_section",
     "sphinx_click",
     "sphinx_toolbox.pre_commit",
     "sphinx_toolbox_experimental.html_section",
@@ -105,6 +103,7 @@ add_module_names = false
 hide_none_rtype = true
 all_typevars = true
 overloads_location = "bottom"
+html_codeblock_linenos_style = "table"
 autodoc_exclude_members = [
     "__dict__",
     "__class__",
@@ -123,3 +122,35 @@ autodoc_exclude_members = [
     "__abstractmethods__",
     "__hash__",
 ]
+
+[tool.mypy]
+python_version = "3.6"
+namespace_packages = true
+check_untyped_defs = true
+warn_unused_ignores = true
+no_implicit_optional = true
+show_error_codes = true
+
+[tool.snippet-fmt]
+directives = [ "code-block",]
+
+[tool.dependency-dash."requirements.txt"]
+order = 10
+
+[tool.dependency-dash."tests/requirements.txt"]
+order = 20
+include = false
+
+[tool.dependency-dash."doc-source/requirements.txt"]
+order = 30
+include = false
+
+[tool.snippet-fmt.languages.python]
+reformat = true
+
+[tool.snippet-fmt.languages.TOML]
+reformat = true
+
+[tool.snippet-fmt.languages.ini]
+
+[tool.snippet-fmt.languages.json]
