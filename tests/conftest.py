@@ -62,7 +62,7 @@ def requirements() -> List[str]:
 
 
 @pytest.fixture()
-def single_file_project(tmp_pathplus: PathPlus, imports, requirements: List[str]):
+def single_file_project(tmp_pathplus: PathPlus, imports: List[str], requirements: List[str]) -> PathPlus:
 	(tmp_pathplus / "my_project.py").write_lines(imports)
 	(tmp_pathplus / "requirements.txt").write_lines(requirements)
 
@@ -70,7 +70,7 @@ def single_file_project(tmp_pathplus: PathPlus, imports, requirements: List[str]
 
 
 @pytest.fixture()
-def package_project(tmp_pathplus: PathPlus, imports, requirements: List[str]):
+def package_project(tmp_pathplus: PathPlus, imports: List[str], requirements: List[str]) -> PathPlus:
 	(tmp_pathplus / "my_project").mkdir()
 	(tmp_pathplus / "my_project" / "__init__.py").write_lines(imports)
 	(tmp_pathplus / "requirements.txt").write_lines(requirements)

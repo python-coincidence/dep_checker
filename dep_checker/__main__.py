@@ -75,7 +75,7 @@ def main(
 		allowed_unused: Optional[List[str]],
 		colour: Optional[bool],
 		work_dir: str = '.',
-		):
+		) -> None:
 	"""
 	Tool to check all requirements are actually required.
 	"""

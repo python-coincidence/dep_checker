@@ -21,7 +21,7 @@ Configuration
 
 	**Examples:**
 
-	.. code-block:: TOML
+	.. code-block:: toml
 
 		# pyproject.toml
 		[tool.dep_checker]
@@ -44,7 +44,7 @@ Configuration
 
 	**Examples:**
 
-	.. code-block:: TOML
+	.. code-block:: toml
 
 		# pyproject.toml
 		[tool.dep_checker.name_mapping]
@@ -72,7 +72,7 @@ Configuration
 
 	**Examples:**
 
-	.. code-block:: TOML
+	.. code-block:: toml
 
 		# pyproject.toml
 		[tool.dep_checker]
@@ -95,6 +95,7 @@ For example:
 
 .. code-block:: python
 
+	# 3rd party
 	import pytest  # nodep
 
 

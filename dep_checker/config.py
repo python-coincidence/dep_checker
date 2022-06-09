@@ -28,7 +28,6 @@ Functions to read configuration.
 
 # stdlib
 import re
-from collections import defaultdict
 from configparser import ConfigParser
 from typing import Any, Callable, Dict, List, Optional
 

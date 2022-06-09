@@ -39,7 +39,7 @@ __all__ = ["Visitor", "is_suppress_importerror"]
 
 if sys.version_info < (3, 10):  # pragma: no cover (py310+)
 	# 3rd party
-	from stdlib_list import stdlib_list  # type: ignore
+	from stdlib_list import stdlib_list  # type: ignore[import]
 
 	libraries = stdlib_list()
 else:  # pragma: no cover (<py310)
@@ -56,7 +56,7 @@ class Visitor(ast.NodeVisitor):
 		self.pkg_name = re.sub(r"[-/\\]", '_', pkg_name.rstrip(r"\/"))
 		self.namespace_packages = namespace_packages or {}
 
-	def record_import(self, name: str, lineno: int):
+	def record_import(self, name: str, lineno: int) -> None:
 		"""
 		Record an import.
 
@@ -146,7 +146,7 @@ class Visitor(ast.NodeVisitor):
 			self.generic_visit(node)
 
 
-def is_suppress_importerror(node: ast.With):
+def is_suppress_importerror(node: ast.With) -> bool:
 	"""
 	Returns whether the given ``with`` block contains a
 	:func:`contextlib.suppress(ImportError) <contextlib.suppress>` contextmanager.
