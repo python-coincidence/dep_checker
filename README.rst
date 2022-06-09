@@ -56,8 +56,8 @@ dep_checker
 	:target: https://github.com/domdfcoding/dep_checker/actions?query=workflow%3A%22mypy%22
 	:alt: mypy status
 
-.. |requires| image:: https://requires.io/github/domdfcoding/dep_checker/requirements.svg?branch=master
-	:target: https://requires.io/github/domdfcoding/dep_checker/requirements/?branch=master
+.. |requires| image:: https://dependency-dash.herokuapp.com/github/domdfcoding/dep_checker/badge.svg
+	:target: https://dependency-dash.herokuapp.com/github/domdfcoding/dep_checker/
 	:alt: Requirements Status
 
 .. |coveralls| image:: https://img.shields.io/coveralls/github/domdfcoding/dep_checker/master?logo=coveralls
@@ -99,7 +99,7 @@ dep_checker
 	:target: https://github.com/domdfcoding/dep_checker/commit/master
 	:alt: GitHub last commit
 
-.. |maintained| image:: https://img.shields.io/maintenance/yes/2021
+.. |maintained| image:: https://img.shields.io/maintenance/yes/2022
 	:alt: Maintenance
 
 .. |pypi-downloads| image:: https://img.shields.io/pypi/dm/dep_checker
