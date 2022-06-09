@@ -21,9 +21,12 @@ python_versions:
  - 3.7
  - 3.8
  - 3.9
- - 3.10-dev
+ - '3.10'
+ - 3.11-dev
  - pypy36
  - pypy37
+ - pypy38
+ - pypy39
 
 console_scripts:
  - dep-checker = dep_checker.__main__:main
