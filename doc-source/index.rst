@@ -58,8 +58,8 @@ dep_checker
 		:workflow: mypy
 		:alt: mypy status
 
-	.. |requires| image:: https://dependency-dash.herokuapp.com/github/domdfcoding/dep_checker/badge.svg
-		:target: https://dependency-dash.herokuapp.com/github/domdfcoding/dep_checker/
+	.. |requires| image:: https://dependency-dash.herokuapp.com/github/python-coincidence/dep_checker/badge.svg
+		:target: https://dependency-dash.herokuapp.com/github/python-coincidence/dep_checker/
 		:alt: Requirements Status
 
 	.. |coveralls| coveralls-shield::
@@ -157,6 +157,6 @@ Contents
 
 	View the :ref:`Function Index <genindex>` or browse the `Source Code <_modules/index.html>`__.
 
-	:github:repo:`Browse the GitHub Repository <domdfcoding/dep_checker>`
+	:github:repo:`Browse the GitHub Repository <python-coincidence/dep_checker>`
 
 .. end links

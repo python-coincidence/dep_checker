@@ -3,13 +3,13 @@ Downloading source code
 =========================
 
 The ``dep_checker`` source code is available on GitHub,
-and can be accessed from the following URL: https://github.com/domdfcoding/dep_checker
+and can be accessed from the following URL: https://github.com/python-coincidence/dep_checker
 
 If you have ``git`` installed, you can clone the repository with the following command:
 
 .. prompt:: bash
 
-	git clone https://github.com/domdfcoding/dep_checker
+	git clone https://github.com/python-coincidence/dep_checker
 
 .. parsed-literal::
 
