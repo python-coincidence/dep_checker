@@ -51,7 +51,7 @@ __license__: str = "MIT License"
 __version__: str = "0.6.2"
 __email__: str = "dominic@davis-foster.co.uk"
 
-__all__ = [
+__all__ = (
 		"template",
 		"check_imports",
 		"DepChecker",
@@ -59,7 +59,7 @@ __all__ = [
 		"UnlistedRequirement",
 		"UnusedRequirement",
 		"make_requirement_tuple",
-		]
+		)
 
 #: The template to use when printing output.
 template = "{name} imported on line {lineno} of {filename}"
@@ -117,7 +117,7 @@ def make_requirement_tuple(data: Dict[str, Any]) -> _nt_types:
 			cls = class_obj
 			break
 	else:
-		raise ValueError(f"Unknown requirement class {class_name!r}")
+		raise ValueError(f"Unknown requirement class {class_name!r}")  # pylint: disable=loop-invariant-statement
 
 	return cls(**data)
 
@@ -234,7 +234,7 @@ class DepChecker:
 
 		for name in namespace_packages or ():
 			namespace, pkg = name.rsplit('.')
-			self.namespace_packages[namespace].append(pkg)
+			self.namespace_packages[namespace].append(pkg)  # pylint: disable=loop-invariant-statement
 
 	def check(
 			self,

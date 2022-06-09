@@ -37,7 +37,7 @@ from configconfig.configvar import ConfigVar
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
 
-__all__ = ["AllowedUnused", "NameMapping", "ConfigReader", "NamespacePackages"]
+__all__ = ("AllowedUnused", "NameMapping", "ConfigReader", "NamespacePackages")
 
 
 def list_from_string(string: str) -> List[str]:

@@ -39,7 +39,7 @@ from consolekit.utils import abort
 # this package
 from dep_checker import check_imports
 
-__all__ = ["main"]
+__all__ = ("main", )
 
 
 @colour_option()
