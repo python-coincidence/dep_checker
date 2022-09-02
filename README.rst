@@ -56,8 +56,8 @@ dep_checker
 	:target: https://github.com/python-coincidence/dep_checker/actions?query=workflow%3A%22mypy%22
 	:alt: mypy status
 
-.. |requires| image:: https://dependency-dash.herokuapp.com/github/python-coincidence/dep_checker/badge.svg
-	:target: https://dependency-dash.herokuapp.com/github/python-coincidence/dep_checker/
+.. |requires| image:: https://dependency-dash.repo-helper.uk/github/python-coincidence/dep_checker/badge.svg
+	:target: https://dependency-dash.repo-helper.uk/github/python-coincidence/dep_checker/
 	:alt: Requirements Status
 
 .. |coveralls| image:: https://img.shields.io/coveralls/github/python-coincidence/dep_checker/master?logo=coveralls

@@ -58,8 +58,8 @@ dep_checker
 		:workflow: mypy
 		:alt: mypy status
 
-	.. |requires| image:: https://dependency-dash.herokuapp.com/github/python-coincidence/dep_checker/badge.svg
-		:target: https://dependency-dash.herokuapp.com/github/python-coincidence/dep_checker/
+	.. |requires| image:: https://dependency-dash.repo-helper.uk/github/python-coincidence/dep_checker/badge.svg
+		:target: https://dependency-dash.repo-helper.uk/github/python-coincidence/dep_checker/
 		:alt: Requirements Status
 
 	.. |coveralls| coveralls-shield::
