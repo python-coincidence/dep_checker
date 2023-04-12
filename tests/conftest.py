@@ -46,6 +46,7 @@ def imports() -> List[str]:
 			"\tpass",
 			"if sys.version_info > (3, 6):",
 			"\timport setuptools",
+			"import tomllib",
 			'',
 			]
 

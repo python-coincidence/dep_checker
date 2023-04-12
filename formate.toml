@@ -47,7 +47,6 @@ known_third_party = [
     "pytest_randomly",
     "pytest_timeout",
     "shippinglabel",
-    "stdlib_list",
 ]
 known_first_party = "dep_checker"
 line_length = 115

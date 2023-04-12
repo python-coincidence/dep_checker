@@ -29,21 +29,15 @@ Private utilities.
 # stdlib
 import ast
 import re
-import sys
 from typing import Any, Dict, List, Optional, Tuple
 
 # 3rd party
 from astatine import get_attribute_name, is_type_checking
 
+# this package
+from dep_checker import _stdlib_list
+
 __all__ = ["Visitor", "is_suppress_importerror"]
-
-if sys.version_info < (3, 10):  # pragma: no cover (py310+)
-	# 3rd party
-	from stdlib_list import stdlib_list  # type: ignore[import]
-
-	libraries = stdlib_list()
-else:  # pragma: no cover (<py310)
-	libraries = sys.stdlib_module_names
 
 
 class Visitor(ast.NodeVisitor):
@@ -76,7 +70,7 @@ class Visitor(ast.NodeVisitor):
 			# Not a namespace package
 			name = name.split('.')[0]
 
-		if name not in libraries and name != self.pkg_name:
+		if name not in _stdlib_list.stdlib and name != self.pkg_name:
 			self.import_sources.append((name, lineno))
 
 	def visit_Import(self, node: ast.Import) -> None:  # noqa: D102
