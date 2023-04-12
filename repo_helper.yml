@@ -6,7 +6,7 @@ author: 'Dominic Davis-Foster'
 email: 'dominic@davis-foster.co.uk'
 username: 'python-coincidence'
 assignee: 'domdfcoding'
-version: '0.7.0'
+version: '0.7.1'
 license: 'MIT'
 short_desc: 'Tool to check all requirements are actually required.'
 
