@@ -22,7 +22,7 @@ file = "LICENSE"
 Homepage = "https://github.com/python-coincidence/dep_checker"
 "Issue Tracker" = "https://github.com/python-coincidence/dep_checker/issues"
 "Source Code" = "https://github.com/python-coincidence/dep_checker"
-Documentation = "https://dep_checker.readthedocs.io/en/latest"
+Documentation = "https://dep-checker.readthedocs.io/en/latest"
 
 [project.scripts]
 dep-checker = "dep_checker.__main__:main"

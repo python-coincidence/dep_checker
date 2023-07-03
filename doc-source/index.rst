@@ -31,7 +31,7 @@ dep_checker
 		  - |license| |language| |requires|
 
 	.. |docs| rtfd-shield::
-		:project: dep_checker
+		:project: dep-checker
 		:alt: Documentation Build Status
 
 	.. |docs_check| actions-shield::
