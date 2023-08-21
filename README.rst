@@ -28,8 +28,8 @@ dep_checker
 	* - Other
 	  - |license| |language| |requires|
 
-.. |docs| image:: https://img.shields.io/readthedocs/dep_checker/latest?logo=read-the-docs
-	:target: https://dep_checker.readthedocs.io/en/latest
+.. |docs| image:: https://img.shields.io/readthedocs/dep-checker/latest?logo=read-the-docs
+	:target: https://dep-checker.readthedocs.io/en/latest
 	:alt: Documentation Build Status
 
 .. |docs_check| image:: https://github.com/python-coincidence/dep_checker/workflows/Docs%20Check/badge.svg
