@@ -91,7 +91,7 @@ dep_checker
 .. |language| image:: https://img.shields.io/github/languages/top/python-coincidence/dep_checker
 	:alt: GitHub top language
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/python-coincidence/dep_checker/v0.7.1
+.. |commits-since| image:: https://img.shields.io/github/commits-since/python-coincidence/dep_checker/v0.8.0
 	:target: https://github.com/python-coincidence/dep_checker/pulse
 	:alt: GitHub commits since tagged version
 
