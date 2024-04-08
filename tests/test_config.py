@@ -2,8 +2,8 @@
 from configparser import ConfigParser
 
 # 3rd party
+import dom_toml
 import pytest
-import toml
 from coincidence import AdvancedDataRegressionFixture
 from domdf_python_tools.paths import PathPlus
 
@@ -97,7 +97,7 @@ class TestToml:
 					]
 			)
 	def test_allow_unused(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
-		toml_config = toml.loads(config)["tool"]["dep_checker"]
+		toml_config = dom_toml.loads(config)["tool"]["dep_checker"]
 		advanced_data_regression.check(AllowedUnused.get(toml_config))
 
 	@pytest.mark.parametrize(
@@ -130,7 +130,7 @@ class TestToml:
 					]
 			)
 	def test_namespace_packages(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
-		toml_config = toml.loads(config)["tool"]["dep_checker"]
+		toml_config = dom_toml.loads(config)["tool"]["dep_checker"]
 		advanced_data_regression.check(NamespacePackages.get(toml_config))
 
 	@pytest.mark.parametrize(
@@ -143,7 +143,7 @@ class TestToml:
 					]
 			)
 	def test_name_mapping(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
-		toml_config = toml.loads(config)["tool"]["dep_checker"]
+		toml_config = dom_toml.loads(config)["tool"]["dep_checker"]
 		advanced_data_regression.check(NameMapping.get(toml_config))
 
 
