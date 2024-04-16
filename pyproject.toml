@@ -61,7 +61,6 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinxcontrib.extras_require",
     "sphinx.ext.todo",
-    "sphinxemoji.sphinxemoji",
     "notfound.extension",
     "sphinx_copybutton",
     "sphinxcontrib.default_values",
@@ -73,7 +72,6 @@ extensions = [
     "sphinx_toolbox.pre_commit",
     "sphinx_toolbox.more_autosummary.column_widths",
 ]
-sphinxemoji_style = "twemoji"
 gitstamp_fmt = "%d %b %Y"
 templates_path = [ "_templates",]
 html_static_path = [ "_static",]
