@@ -62,7 +62,7 @@ __all__ = (
 		)
 
 #: The template to use when printing output.
-template = "{name} imported on line {lineno} of {filename}"
+template = "{name} imported at {filename}:{lineno}"
 
 reader = ConfigReader("dep_checker", default_factory=dict)
 
