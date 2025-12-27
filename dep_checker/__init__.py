@@ -320,7 +320,7 @@ def check_imports(
 		colour: Optional[bool] = None,
 		name_mapping: Optional[Dict[str, str]] = None,
 		namespace_packages: Optional[List[str]] = None,
-		work_dir: PathLike = '.'
+		work_dir: PathLike = '.',
 		) -> int:
 	"""
 	Check imports for the given package, against the given requirements file.

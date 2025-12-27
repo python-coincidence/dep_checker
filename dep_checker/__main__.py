@@ -48,14 +48,14 @@ __all__ = ("main", )
 		"--work-dir",
 		type=click.STRING,
 		default='.',
-		help="The directory to find the source of the package in. Useful with the src/ layout."
+		help="The directory to find the source of the package in. Useful with the src/ layout.",
 		)
 @click.option(
 		"-a",
 		"--allowed-unused",
 		type=click.STRING,
 		multiple=True,
-		help="Requirements which are allowed to be unused in the source code."
+		help="Requirements which are allowed to be unused in the source code.",
 		)
 @click.option(
 		"--req-file",

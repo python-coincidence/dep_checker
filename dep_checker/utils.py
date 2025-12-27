@@ -43,6 +43,9 @@ __all__ = ["Visitor", "is_suppress_importerror"]
 class Visitor(ast.NodeVisitor):
 	"""
 	:class:`ast.NodeVisitor` to identify imports in a module.
+
+	:param pkg_name:
+	:param namespace_packages:
 	"""
 
 	def __init__(self, pkg_name: str, namespace_packages: Optional[Dict[str, List[str]]] = None):
