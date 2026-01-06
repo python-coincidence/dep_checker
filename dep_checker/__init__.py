@@ -348,7 +348,7 @@ def check_imports(
 		* Added the ``name_mapping`` option.
 		* Added the ``work_dir`` option.
 
-	.. versionchanged:: 0.7.0 Replaced the ``req_file`` argument with the ``*requirements`` argument.
+	.. versionchanged:: 1.0.0  Replaced the ``req_file`` argument with the ``*requirements`` argument.
 		Use :func:`shippinglabel.requirements.read_requirements(req_file)[0] <shippinglabel.requirements.read_requirements>`
 		 to get the original bevhaviour.
 	"""
