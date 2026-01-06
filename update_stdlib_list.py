@@ -11,11 +11,24 @@ https://github.com/PyCQA/isort/blob/main/LICENSE
 from sphinx.ext.intersphinx import fetch_inventory
 
 URL = "https://docs.python.org/{}/objects.inv"
-VERSIONS = [('2', '7'), ('3', '6'), ('3', '7'), ('3', '8'), ('3', '9'), ('3', "10"), ('3', "11"), ('3', "12")]
+VERSIONS = [
+		('2', '7'),
+		('3', '6'),
+		('3', '7'),
+		('3', '8'),
+		('3', '9'),
+		('3', "10"),
+		('3', "11"),
+		('3', "12"),
+		('3', "13"),
+		('3', "14"),
+		]
 
 
 class FakeConfig:
 	intersphinx_timeout = None
+	intersphinx_cache_limit = 9999
+	tls_cacerts = None
 	tls_verify = True
 	user_agent = ''
 
@@ -35,7 +48,7 @@ for version_info in VERSIONS:
 
 	for module in invdata["py:module"]:
 		root, *_ = module.split('.')
-		if root not in ["__future__", "__main__"]:
+		if root not in ["__main__"]:
 			all_modules.add(root)
 
 with open("dep_checker/_stdlib_list.py", 'w', encoding="UTF-8") as stdlib_file:
