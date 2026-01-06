@@ -47,6 +47,7 @@ def imports() -> List[str]:
 			"if sys.version_info > (3, 6):",
 			"\timport setuptools",
 			"import tomllib",
+			"from __future__ import annotations",
 			'',
 			]
 
