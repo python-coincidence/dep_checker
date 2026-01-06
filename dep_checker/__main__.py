@@ -88,8 +88,7 @@ def main(
 	"""
 
 	# 3rd party
-	from domdf_python_tools.paths import PathPlus
-	from domdf_python_tools.typing import PathLike
+	from domdf_python_tools.paths import PathLike, PathPlus
 	from shippinglabel.requirements import ComparableRequirement, parse_pyproject_dependencies, read_requirements
 
 	if allowed_unused == ():
@@ -111,7 +110,7 @@ def main(
 		dynamic = dom_toml.load(req_file)["project"].get("dynamic", ())
 
 		if "requirements" in dynamic:
-			requirements = read_req_file(work_dir_p / "requirements.txt")
+			requirements = read_requirements("requirements.txt")[0]
 		else:
 			requirements = parse_pyproject_dependencies(req_file, flavour="pep621")
 
