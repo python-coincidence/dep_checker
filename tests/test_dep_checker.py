@@ -2,12 +2,12 @@
 from typing import Any, Dict, List
 
 # 3rd party
-from packaging.requirements import Requirement
 import pytest
 from coincidence import AdvancedDataRegressionFixture
+from coincidence.regressions import AdvancedFileRegressionFixture
 from consolekit.testing import CliRunner, Result
 from domdf_python_tools.paths import PathPlus, in_directory
-from pytest_regressions.file_regression import FileRegressionFixture
+from packaging.requirements import Requirement
 
 # this package
 from dep_checker import (
@@ -26,7 +26,9 @@ def test_check_imports(
 		requirements: List[str],
 		advanced_data_regression: AdvancedDataRegressionFixture,
 		):
-	assert check_imports("my_project", *map(Requirement, requirements), work_dir=single_file_project, colour=False) == 1
+	assert check_imports(
+			"my_project", *map(Requirement, requirements), work_dir=single_file_project, colour=False
+			) == 1
 	advanced_data_regression.check(capsys.readouterr())
 
 
@@ -37,34 +39,36 @@ def test_check_imports_package(
 		advanced_data_regression: AdvancedDataRegressionFixture,
 		):
 
-	assert check_imports("my_project", *map(Requirement, requirements), work_dir=package_project, colour=False) == 1
+	assert check_imports(
+			"my_project", *map(Requirement, requirements), work_dir=package_project, colour=False
+			) == 1
 	advanced_data_regression.check(capsys.readouterr())
 
 
 def test_cli(
 		single_file_project: PathPlus,
-		file_regression: FileRegressionFixture,
+		advanced_file_regression: AdvancedFileRegressionFixture,
 		):
 
 	with in_directory(single_file_project):
 		runner = CliRunner()
 		result: Result = runner.invoke(main, args=["my_project", "--no-colour"])
 
-	result.check_stdout(file_regression)
+	result.check_stdout(advanced_file_regression)
 	assert result.exit_code == 1
 
 
-def test_cli_package(package_project: PathPlus, file_regression: FileRegressionFixture):
+def test_cli_package(package_project: PathPlus, advanced_file_regression: AdvancedFileRegressionFixture):
 
 	with in_directory(package_project):
 		runner = CliRunner()
 		result: Result = runner.invoke(main, args=["my_project", "--no-colour"])
 
-	result.check_stdout(file_regression)
+	result.check_stdout(advanced_file_regression)
 	assert result.exit_code == 1
 
 
-def test_cli_package_srcdir(package_project: PathPlus, file_regression: FileRegressionFixture):
+def test_cli_package_srcdir(package_project: PathPlus, advanced_file_regression: AdvancedFileRegressionFixture):
 	(package_project / "my_project").move(package_project / "src" / "my_project")
 
 	with in_directory(package_project):
@@ -74,7 +78,7 @@ def test_cli_package_srcdir(package_project: PathPlus, file_regression: FileRegr
 				args=["my_project", "--no-colour", "--work-dir", "src", "--req-file", "../requirements.txt"],
 				)
 
-	result.check_stdout(file_regression)
+	result.check_stdout(advanced_file_regression)
 	assert result.exit_code == 1
 
 

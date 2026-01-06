@@ -40,7 +40,6 @@ from consolekit.terminal_colours import Fore, resolve_color_default
 from domdf_python_tools.paths import PathPlus, in_directory
 from domdf_python_tools.typing import PathLike
 from packaging.requirements import Requirement
-from shippinglabel.requirements import read_requirements
 
 # this package
 from dep_checker.config import AllowedUnused, ConfigReader, NameMapping, NamespacePackages

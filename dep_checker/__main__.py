@@ -28,16 +28,14 @@ Tool to check all requirements are actually required.
 
 # stdlib
 import sys
-from typing import List, Optional
+from typing import List, Optional, Set
 
 # 3rd party
 import click
 import dom_toml
 from consolekit import click_command
-from consolekit.options import auto_default_option, colour_option, flag_option
+from consolekit.options import colour_option, flag_option
 from consolekit.utils import abort
-from domdf_python_tools.paths import PathPlus
-from shippinglabel.requirements import parse_pyproject_dependencies, read_requirements
 
 # this package
 from dep_checker import check_imports
@@ -60,13 +58,18 @@ __all__ = ("main", )
 		multiple=True,
 		help="Requirements which are allowed to be unused in the source code.",
 		)
-@auto_default_option(
+@click.option(
 		"--req-file",
 		type=click.STRING,
 		metavar="FILENAME",
-		help="Parse the requirements from the given requirements file.",
+		help="Parse the requirements from the given requirements file (or pyproject.toml file with --pyproject).",
 		)
-@flag_option("-P", "--pyproject", help="Parse the requirements from 'pyproject.toml'.", default=False,)
+@flag_option(
+		"-p",
+		"--pyproject",
+		help="Parse the requirements from 'pyproject.toml'.",
+		default=False,
+		)
 @click.argument(
 		"pkg-name",
 		type=click.STRING,
@@ -76,7 +79,7 @@ def main(
 		pkg_name: str,
 		allowed_unused: Optional[List[str]],
 		colour: Optional[bool] = None,
-		req_file: str = "requirements.txt",
+		req_file: Optional[str] = None,
 		work_dir: str = '.',
 		pyproject: bool = False
 		) -> None:
@@ -84,12 +87,17 @@ def main(
 	Tool to check all requirements are actually required.
 	"""
 
+	# 3rd party
+	from domdf_python_tools.paths import PathPlus
+	from domdf_python_tools.typing import PathLike
+	from shippinglabel.requirements import ComparableRequirement, parse_pyproject_dependencies, read_requirements
+
 	if allowed_unused == ():
 		allowed_unused = None
 
 	work_dir_p = PathPlus(work_dir)
 
-	def read_req_file(req_file):
+	def read_req_file(req_file: PathLike) -> Set[ComparableRequirement]:
 		req_file = PathPlus(req_file)
 
 		if not req_file.is_absolute():
@@ -98,15 +106,19 @@ def main(
 		return read_requirements(req_file)[0]
 
 	if pyproject:
-		pyproject_file = work_dir_p / "pyproject.toml"
-		dynamic = dom_toml.load(pyproject_file)["project"].get("dynamic", ())
+		if req_file is None:
+			req_file = "pyproject.toml"
+		dynamic = dom_toml.load(req_file)["project"].get("dynamic", ())
 
 		if "requirements" in dynamic:
 			requirements = read_req_file(work_dir_p / "requirements.txt")
 		else:
-			requirements = parse_pyproject_dependencies(pyproject_file, flavour="pep621")
+			requirements = parse_pyproject_dependencies(req_file, flavour="pep621")
 
 	else:
+		if req_file is None:
+			req_file = "requirements.txt"
+
 		requirements = read_req_file(req_file)
 
 	try:
