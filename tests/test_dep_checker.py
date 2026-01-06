@@ -1,7 +1,8 @@
 # stdlib
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 # 3rd party
+from packaging.requirements import Requirement
 import pytest
 from coincidence import AdvancedDataRegressionFixture
 from consolekit.testing import CliRunner, Result
@@ -22,19 +23,21 @@ from dep_checker.__main__ import main
 def test_check_imports(
 		single_file_project: PathPlus,
 		capsys,
+		requirements: List[str],
 		advanced_data_regression: AdvancedDataRegressionFixture,
 		):
-	assert check_imports("my_project", work_dir=single_file_project, colour=False) == 1
+	assert check_imports("my_project", *map(Requirement, requirements), work_dir=single_file_project, colour=False) == 1
 	advanced_data_regression.check(capsys.readouterr())
 
 
 def test_check_imports_package(
 		package_project: PathPlus,
 		capsys,
+		requirements: List[str],
 		advanced_data_regression: AdvancedDataRegressionFixture,
 		):
 
-	assert check_imports("my_project", work_dir=package_project, colour=False) == 1
+	assert check_imports("my_project", *map(Requirement, requirements), work_dir=package_project, colour=False) == 1
 	advanced_data_regression.check(capsys.readouterr())
 
 
@@ -96,9 +99,11 @@ def test_with_config(
 		capsys,
 		advanced_data_regression: AdvancedDataRegressionFixture,
 		config: Dict[str, Any],
+		requirements: List[str],
 		):
 	assert check_imports(
 			"my_project",
+			*map(Requirement, requirements),
 			work_dir=single_file_project,
 			colour=False,
 			**config,

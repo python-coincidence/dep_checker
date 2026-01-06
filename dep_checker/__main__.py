@@ -36,11 +36,10 @@ import dom_toml
 from consolekit import click_command
 from consolekit.options import auto_default_option, colour_option, flag_option
 from consolekit.utils import abort
-
-# this package
 from domdf_python_tools.paths import PathPlus
 from shippinglabel.requirements import parse_pyproject_dependencies, read_requirements
 
+# this package
 from dep_checker import check_imports
 
 __all__ = ("main", )
@@ -67,11 +66,7 @@ __all__ = ("main", )
 		metavar="FILENAME",
 		help="Parse the requirements from the given requirements file.",
 		)
-@flag_option(
-		"-P", "--pyproject",
-		type=click.STRING,
-		help="Parse the requirements from 'pyproject.toml'.",
-		)
+@flag_option("-P", "--pyproject", help="Parse the requirements from 'pyproject.toml'.", default=False,)
 @click.argument(
 		"pkg-name",
 		type=click.STRING,
@@ -92,22 +87,22 @@ def main(
 	if allowed_unused == ():
 		allowed_unused = None
 
-	work_dir = PathPlus(work_dir)
+	work_dir_p = PathPlus(work_dir)
 
 	def read_req_file(req_file):
 		req_file = PathPlus(req_file)
 
 		if not req_file.is_absolute():
-			req_file = work_dir / req_file
+			req_file = work_dir_p / req_file
 
 		return read_requirements(req_file)[0]
 
 	if pyproject:
-		pyproject_file = work_dir / "pyproject.toml"
+		pyproject_file = work_dir_p / "pyproject.toml"
 		dynamic = dom_toml.load(pyproject_file)["project"].get("dynamic", ())
 
 		if "requirements" in dynamic:
-			requirements = read_req_file(work_dir / "requirements.txt")
+			requirements = read_req_file(work_dir_p / "requirements.txt")
 		else:
 			requirements = parse_pyproject_dependencies(pyproject_file, flavour="pep621")
 
@@ -120,7 +115,7 @@ def main(
 				*requirements,
 				allowed_unused=allowed_unused,
 				colour=colour,
-				work_dir=work_dir,
+				work_dir=work_dir_p,
 				)
 		sys.exit(ret)
 	except FileNotFoundError as e:
