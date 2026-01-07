@@ -26,7 +26,7 @@ from dep_checker.utils import is_suppress_importerror
 				("with foo.suppress(TypeError): pass", False),
 				("with suppress: pass", False),
 				("with foo: pass", False),
-				]
+				],
 		)
 def test_is_suppress_importerror(source: str, expected: bool):
 	node = ast.parse(source).body[0]

@@ -21,7 +21,7 @@ class TestIni:
 					pytest.param("[dep_checker]\nallowed_unused = foo, bar", id="foo, bar"),
 					pytest.param("[dep_checker]\nallowed_unused =  foo, bar", id=" foo, bar"),
 					pytest.param("[dep_checker]\nallowed_unused =\n    foo\n    bar", id="foo\\nbar"),
-					]
+					],
 			)
 	def test_allow_unused(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
 		ini = ConfigParser()
@@ -49,7 +49,7 @@ class TestIni:
 							"[dep_checker]\nnamespace_packages =\n    namespace.foo\n    namespace.bar",
 							id="foo\\nbar",
 							),
-					]
+					],
 			)
 	def test_namespace_packages(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
 		ini = ConfigParser()
@@ -74,7 +74,7 @@ class TestIni:
 							"[dep_checker]\nname_mapping =\n    foo:bob\n   bar = alice",
 							id="foo:bob\nbar = alice",
 							),
-					]
+					],
 			)
 	def test_name_mapping(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
 		ini = ConfigParser()
@@ -94,7 +94,7 @@ class TestToml:
 					pytest.param("[tool.dep_checker]\nallowed_unused =  'foo, bar'", id=" foo, bar"),
 					pytest.param("[tool.dep_checker]\nallowed_unused = ['foo']", id="list1"),
 					pytest.param("[tool.dep_checker]\nallowed_unused = ['foo', 'bar']", id="list2"),
-					]
+					],
 			)
 	def test_allow_unused(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
 		toml_config = dom_toml.loads(config)["tool"]["dep_checker"]
@@ -127,7 +127,7 @@ class TestToml:
 							"[tool.dep_checker]\nnamespace_packages = ['namespace.foo', 'namespace.bar']",
 							id="list2",
 							),
-					]
+					],
 			)
 	def test_namespace_packages(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
 		toml_config = dom_toml.loads(config)["tool"]["dep_checker"]
@@ -140,7 +140,7 @@ class TestToml:
 					pytest.param("[tool.dep_checker.name_mapping]\nfoo = 'bob'", id="table"),
 					pytest.param("[tool.dep_checker]\nname_mapping = {foo = 'bob', bar = 'alice'}", id="inline2"),
 					pytest.param("[tool.dep_checker.name_mapping]\nfoo = 'bob'\nbar = 'alice'", id="table2"),
-					]
+					],
 			)
 	def test_name_mapping(self, config: str, advanced_data_regression: AdvancedDataRegressionFixture):
 		toml_config = dom_toml.loads(config)["tool"]["dep_checker"]

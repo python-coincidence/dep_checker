@@ -89,7 +89,7 @@ def test_cli_package_srcdir(package_project: PathPlus, file_regression: FileRegr
 						{"namespace_packages": ["ruamel.yaml"], "name_mapping": {"Bio": "biopython"}},
 						id="name_mapping_bio,namespace_ruamel",
 						),
-				]
+				],
 		)
 def test_with_config(
 		single_file_project: PathPlus,

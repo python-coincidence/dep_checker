@@ -44,7 +44,7 @@ def test_dep_checker_package(
 						{"namespace_packages": ["ruamel.yaml"], "name_mapping": {"Bio": "biopython"}},
 						id="name_mapping_bio,namespace_ruamel",
 						),
-				]
+				],
 		)
 def test_with_config(
 		single_file_project: PathPlus,
