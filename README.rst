@@ -103,7 +103,7 @@ dep_checker
 	:alt: Maintenance
 
 .. |pypi-downloads| image:: https://img.shields.io/pypi/dm/dep_checker
-	:target: https://pypi.org/project/dep_checker/
+	:target: https://pypistats.org/packages/dep_checker/
 	:alt: PyPI - Downloads
 
 .. end shields
