@@ -1,0 +1,12 @@
+✘ pytest imported at my_project.py:5 but not listed as a requirement
+✘ chemistry_tools imported at my_project.py:6 but not listed as a requirement
+✘ pathlib2 imported at my_project.py:7 but not listed as a requirement
+✘ typing_extensions imported at my_project.py:8 but not listed as a requirement
+✘ domdf_python_tools imported at my_project.py:9 but not listed as a requirement
+✘ consolekit imported at my_project.py:10 but not listed as a requirement
+✘ click imported at my_project.py:11 but not listed as a requirement
+✘ pandas imported at my_project.py:12 but not listed as a requirement
+✘ ruamel imported at my_project.py:13 but not listed as a requirement
+✘ Bio imported at my_project.py:15 but not listed as a requirement
+✘ configconfig imported at my_project.py:31 but not listed as a requirement
+✘ setuptools imported at my_project.py:35 but not listed as a requirement
