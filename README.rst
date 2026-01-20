@@ -103,7 +103,7 @@ dep_checker
 	:alt: Maintenance
 
 .. |pypi-downloads| image:: https://img.shields.io/pypi/dm/dep_checker
-	:target: https://pypistats.org/packages/dep_checker/
+	:target: https://pypistats.org/packages/dep_checker
 	:alt: PyPI - Downloads
 
 .. end shields
@@ -119,6 +119,6 @@ To install with ``pip``:
 
 .. code-block:: bash
 
-	$ python -m pip install dep_checker
+	$ python -m pip install dep-checker
 
 .. end installation

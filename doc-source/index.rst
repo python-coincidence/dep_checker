@@ -121,6 +121,7 @@ Installation
 
 .. installation:: dep_checker
 	:pypi:
+	:pypi-name: dep-checker
 	:github:
 
 .. end installation
