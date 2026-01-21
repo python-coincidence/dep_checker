@@ -3,7 +3,7 @@ requires = [ "whey",]
 build-backend = "whey"
 
 [project]
-name = "dep_checker"
+name = "dep-checker"
 version = "0.9.0"
 description = "Tool to check all requirements are actually required."
 readme = "README.rst"
@@ -38,6 +38,7 @@ python-versions = [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13",]
 python-implementations = [ "CPython", "PyPy",]
 platforms = [ "Windows", "macOS", "Linux",]
 license-key = "MIT"
+package = "dep_checker"
 
 [tool.sphinx-pyproject]
 github_username = "python-coincidence"

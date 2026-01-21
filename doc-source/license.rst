@@ -7,4 +7,4 @@ License
 .. license-info:: MIT
 
 .. license::
-	:py: dep_checker
+	:py: dep-checker
