@@ -68,20 +68,20 @@ dep_checker
 	:target: https://www.codefactor.io/repository/github/python-coincidence/dep_checker
 	:alt: CodeFactor Grade
 
-.. |pypi-version| image:: https://img.shields.io/pypi/v/dep_checker
-	:target: https://pypi.org/project/dep_checker/
+.. |pypi-version| image:: https://img.shields.io/pypi/v/dep-checker
+	:target: https://pypi.org/project/dep-checker/
 	:alt: PyPI - Package Version
 
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/dep_checker?logo=python&logoColor=white
-	:target: https://pypi.org/project/dep_checker/
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/dep-checker?logo=python&logoColor=white
+	:target: https://pypi.org/project/dep-checker/
 	:alt: PyPI - Supported Python Versions
 
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/dep_checker
-	:target: https://pypi.org/project/dep_checker/
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/dep-checker
+	:target: https://pypi.org/project/dep-checker/
 	:alt: PyPI - Supported Implementations
 
-.. |wheel| image:: https://img.shields.io/pypi/wheel/dep_checker
-	:target: https://pypi.org/project/dep_checker/
+.. |wheel| image:: https://img.shields.io/pypi/wheel/dep-checker
+	:target: https://pypi.org/project/dep-checker/
 	:alt: PyPI - Wheel
 
 .. |license| image:: https://img.shields.io/github/license/python-coincidence/dep_checker
@@ -102,8 +102,8 @@ dep_checker
 .. |maintained| image:: https://img.shields.io/maintenance/yes/2026
 	:alt: Maintenance
 
-.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/dep_checker
-	:target: https://pypistats.org/packages/dep_checker
+.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/dep-checker
+	:target: https://pypistats.org/packages/dep-checker
 	:alt: PyPI - Downloads
 
 .. end shields

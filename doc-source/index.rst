@@ -69,22 +69,22 @@ dep_checker
 		:alt: CodeFactor Grade
 
 	.. |pypi-version| pypi-shield::
-		:project: dep_checker
+		:project: dep-checker
 		:version:
 		:alt: PyPI - Package Version
 
 	.. |supported-versions| pypi-shield::
-		:project: dep_checker
+		:project: dep-checker
 		:py-versions:
 		:alt: PyPI - Supported Python Versions
 
 	.. |supported-implementations| pypi-shield::
-		:project: dep_checker
+		:project: dep-checker
 		:implementations:
 		:alt: PyPI - Supported Implementations
 
 	.. |wheel| pypi-shield::
-		:project: dep_checker
+		:project: dep-checker
 		:wheel:
 		:alt: PyPI - Wheel
 
@@ -108,7 +108,7 @@ dep_checker
 		:alt: Maintenance
 
 	.. |pypi-downloads| pypi-shield::
-		:project: dep_checker
+		:project: dep-checker
 		:downloads: month
 		:alt: PyPI - Downloads
 
