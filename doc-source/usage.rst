@@ -109,6 +109,12 @@ Command Line
 	:prog: dep-checker
 
 
+The :option:`-P / --pyproject <-P>` option takes precedence over the :option:`--req-file` option.
+
+.. versionchanged:: 1.0.0
+
+	Added the :option:`-P / --pyproject <-P>` option.
+
 As a ``pre-commit`` hook
 ----------------------------
 

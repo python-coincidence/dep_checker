@@ -28,12 +28,13 @@ Tool to check all requirements are actually required.
 
 # stdlib
 import sys
-from typing import List, Optional
+from typing import List, Optional, Set
 
 # 3rd party
 import click
+import dom_toml
 from consolekit import click_command
-from consolekit.options import colour_option
+from consolekit.options import colour_option, flag_option
 from consolekit.utils import abort
 
 # this package
@@ -61,8 +62,13 @@ __all__ = ("main", )
 		"--req-file",
 		type=click.STRING,
 		metavar="FILENAME",
-		default="requirements.txt",
-		help="The requirements file.",
+		help="Parse the requirements from the given requirements file (or pyproject.toml file with --pyproject).",
+		)
+@flag_option(
+		"-p",
+		"--pyproject",
+		help="Parse the requirements from 'pyproject.toml'.",
+		default=False,
 		)
 @click.argument(
 		"pkg-name",
@@ -71,25 +77,56 @@ __all__ = ("main", )
 @click_command()
 def main(
 		pkg_name: str,
-		req_file: str,
 		allowed_unused: Optional[List[str]],
-		colour: Optional[bool],
+		colour: Optional[bool] = None,
+		req_file: Optional[str] = None,
 		work_dir: str = '.',
+		pyproject: bool = False
 		) -> None:
 	"""
 	Tool to check all requirements are actually required.
 	"""
 
+	# 3rd party
+	from domdf_python_tools.paths import PathLike, PathPlus
+	from shippinglabel.requirements import ComparableRequirement, parse_pyproject_dependencies, read_requirements
+
 	if allowed_unused == ():
 		allowed_unused = None
+
+	work_dir_p = PathPlus(work_dir)
+
+	def read_req_file(req_file: PathLike) -> Set[ComparableRequirement]:
+		req_file = PathPlus(req_file)
+
+		if not req_file.is_absolute():
+			req_file = work_dir_p / req_file
+
+		return read_requirements(req_file)[0]
+
+	if pyproject:
+		if req_file is None:
+			req_file = "pyproject.toml"
+		dynamic = dom_toml.load(req_file)["project"].get("dynamic", ())
+
+		if "requirements" in dynamic:
+			requirements = read_requirements("requirements.txt")[0]
+		else:
+			requirements = parse_pyproject_dependencies(req_file, flavour="pep621")
+
+	else:
+		if req_file is None:
+			req_file = "requirements.txt"
+
+		requirements = read_req_file(req_file)
 
 	try:
 		ret = check_imports(
 				pkg_name,
-				req_file=req_file,
+				*requirements,
 				allowed_unused=allowed_unused,
 				colour=colour,
-				work_dir=work_dir,
+				work_dir=work_dir_p,
 				)
 		sys.exit(ret)
 	except FileNotFoundError as e:
