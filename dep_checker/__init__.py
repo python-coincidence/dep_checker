@@ -39,7 +39,7 @@ import click
 from consolekit.terminal_colours import Fore, resolve_color_default
 from domdf_python_tools.paths import PathPlus, in_directory
 from domdf_python_tools.typing import PathLike
-from shippinglabel.requirements import read_requirements
+from packaging.requirements import Requirement
 
 # this package
 from dep_checker.config import AllowedUnused, ConfigReader, NameMapping, NamespacePackages
@@ -315,18 +315,18 @@ def iter_files_to_check(basepath: PathLike, pkg_name: str) -> Iterator[PathPlus]
 
 def check_imports(
 		pkg_name: str,
-		req_file: PathLike = "requirements.txt",
+		*requirements: Requirement,
 		allowed_unused: Optional[List[str]] = None,
 		colour: Optional[bool] = None,
 		name_mapping: Optional[Dict[str, str]] = None,
 		namespace_packages: Optional[List[str]] = None,
 		work_dir: PathLike = '.',
 		) -> int:
-	"""
+	r"""
 	Check imports for the given package, against the given requirements file.
 
 	:param pkg_name:
-	:param req_file:
+	:param \*requirements:
 	:param allowed_unused: List of requirements which are allowed to be unused in the source code.
 	:default allowed_unused: ``[]``
 	:param colour: Whether to use coloured output.
@@ -346,6 +346,10 @@ def check_imports(
 
 		* Added the ``name_mapping`` option.
 		* Added the ``work_dir`` option.
+
+	.. versionchanged:: 1.0.0  Replaced the ``req_file`` argument with the ``*requirements`` argument.
+		Use :func:`shippinglabel.requirements.read_requirements(req_file)[0] <shippinglabel.requirements.read_requirements>`
+		 to get the original bevhaviour.
 	"""
 
 	ret = 0
@@ -362,17 +366,11 @@ def check_imports(
 		namespace_packages = NamespacePackages.get(config)
 
 	work_dir = PathPlus(work_dir)
-	req_file = PathPlus(req_file)
-
-	if not req_file.is_absolute():
-		req_file = work_dir / req_file
-
-	req_file = req_file.abspath()
 	work_dir = work_dir.abspath()
 
 	checker = DepChecker(
 			pkg_name,
-			requirements=map(attrgetter("name"), read_requirements(req_file)[0]),
+			requirements=map(attrgetter("name"), requirements),
 			allowed_unused=allowed_unused,
 			name_mapping=name_mapping,
 			namespace_packages=namespace_packages,
